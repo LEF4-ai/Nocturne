@@ -1,6 +1,6 @@
 /* NOCTURNE — service worker : le jeu marche hors ligne.
    Aucune donnée de la joueuse ne passe ici : elles restent dans localStorage. */
-const VERSION = 'nocturne-v1';
+const VERSION = 'nocturne-v3-punk';
 const CORE = ['./', './index.html', './manifest.webmanifest', './icon.svg',
   './icon-192.png', './icon-512.png', './icon-maskable-512.png', './apple-touch-icon.png'];
 const FONTS = 'nocturne-fonts-v1';
