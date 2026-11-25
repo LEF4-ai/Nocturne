@@ -1,0 +1,1193 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0E0B10">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Nocturne">
+<meta name="description" content="On ne tue pas ses démons, on les apprivoise.">
+<title>NOCTURNE</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="icon" href="icon-192.png" sizes="192x192" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=Inter:wght@400;500;600&family=Pirata+One&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0E0B10; --plum:#241629; --plum2:#2e1d34; --line:#3d2a45;
+  --blood:#7A1430; --gold:#C9A45C; --moon:#ECE6DA; --verdi:#6FBFB0; --ash:#8C8391;
+  --goth:'Pirata One','UnifrakturMaguntia',serif;
+  --serif:'Cormorant Garamond',Georgia,serif;
+  --ui:'Inter',system-ui,-apple-system,'Segoe UI',sans-serif;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--ink);color:var(--moon);font-family:var(--ui);font-size:16px;line-height:1.45}
+body{min-height:100dvh;background:
+  radial-gradient(120% 60% at 50% -10%,#2a1730 0%,transparent 60%),
+  radial-gradient(100% 40% at 50% 110%,#16232a 0%,transparent 70%),var(--ink);background-attachment:fixed}
+#app{max-width:480px;margin:0 auto;min-height:100dvh;position:relative}
+button{font:inherit;color:inherit}
+.screen{padding:12px 18px 110px}
+.onb .screen{padding-bottom:40px}
+
+/* top bar */
+.top{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;padding:calc(env(safe-area-inset-top) + 8px) 14px 8px;background:linear-gradient(var(--ink) 70%,transparent)}
+.brand{font-family:var(--goth);font-size:22px;letter-spacing:.06em;color:var(--moon);opacity:.9}
+.talk{min-height:44px;padding:0 14px;border-radius:22px;border:1px solid var(--line);background:var(--plum);font-size:13px;font-weight:600;cursor:pointer}
+
+/* nav */
+.nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;z-index:20;display:grid;grid-template-columns:repeat(4,1fr);background:rgba(14,11,16,.94);backdrop-filter:blur(8px);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom)}
+.nav button{min-height:62px;background:none;border:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:11px;color:var(--ash);cursor:pointer}
+.nav button.on{color:var(--moon)}
+.nav svg{width:22px;height:22px}
+
+/* type */
+h1,h2,h3,.goth{font-family:var(--goth);font-weight:400;letter-spacing:.02em;margin:0}
+h1{font-size:44px;line-height:1}
+h2{font-size:30px;line-height:1.1;margin:8px 0 6px}
+h3{font-size:22px;margin:0 0 4px}
+p{margin:8px 0}
+.muted{color:var(--ash)}
+.small{font-size:13px}
+.center{text-align:center}
+.her{font-family:var(--serif);color:var(--gold);font-size:21px;line-height:1.3;font-weight:600}
+.dv{font-family:var(--serif);font-style:italic;color:var(--verdi);font-size:22px;line-height:1.3;display:inline-block;animation:tremble .34s steps(2) infinite}
+.dname{color:var(--verdi)}
+.gold{color:var(--gold)}
+@keyframes tremble{0%,100%{transform:translate(0,0)}25%{transform:translate(.5px,-.4px)}50%{transform:translate(-.4px,.5px)}75%{transform:translate(.4px,.3px)}}
+
+/* surfaces */
+.card{background:var(--plum);border:1px solid var(--line);border-radius:16px;padding:16px;margin:12px 0}
+.card.gold{border-color:rgba(201,164,92,.45)}
+.tarot{position:relative;background:linear-gradient(180deg,#2a1a30,#1c1121);border-radius:14px;padding:14px 12px 12px;border:1px solid #4a3552;outline:1px solid rgba(111,191,176,.25);outline-offset:-6px;text-align:center}
+.tarot .num{font-family:var(--serif);font-size:14px;letter-spacing:.2em;color:var(--ash)}
+.tarot .tname{font-family:var(--goth);font-size:21px;color:var(--verdi);line-height:1.05;margin-top:4px}
+.tarot .tprof{font-size:12px;color:var(--ash)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+
+/* buttons */
+.btn{min-height:48px;padding:10px 16px;border-radius:12px;border:1px solid var(--line);background:var(--plum2);font-weight:600;font-size:15px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;text-align:center}
+.btn.block{display:flex;width:100%;margin:10px 0}
+.btn.ghost{background:transparent}
+.btn.goldb{border-color:rgba(201,164,92,.6);color:var(--gold)}
+.btn.verdi{border-color:rgba(111,191,176,.5);color:var(--verdi)}
+.btn[disabled]{opacity:.4;pointer-events:none}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.row.end{justify-content:flex-end}
+.between{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.back{min-height:44px;background:none;border:0;color:var(--ash);font-size:14px;padding:0;cursor:pointer}
+
+/* wax seal */
+.sealwrap{display:flex;flex-direction:column;align-items:center;gap:8px;margin:22px 0 8px}
+.seal{width:96px;height:96px;border-radius:50%;border:0;cursor:pointer;position:relative;
+  background:radial-gradient(circle at 38% 32%,#a4223f 0%,#7A1430 45%,#4c0a1d 100%);
+  box-shadow:0 0 0 5px #5a0e23,0 0 0 7px rgba(201,164,92,.25),0 10px 24px rgba(0,0,0,.6),inset 0 -6px 12px rgba(0,0,0,.35);
+  display:flex;align-items:center;justify-content:center;transition:transform .12s}
+.seal:active{transform:scale(.93)}
+.seal svg{width:44px;height:44px}
+.seal-label{font-family:var(--serif);font-size:19px;font-weight:600;color:var(--moon)}
+.seal.small{width:72px;height:72px}
+.seal.small svg{width:32px;height:32px}
+
+/* chips & inputs */
+.chip{min-height:44px;padding:8px 14px;border-radius:22px;border:1px solid var(--line);background:var(--plum);cursor:pointer;font-size:14px}
+.chip.on{border-color:var(--gold);color:var(--gold)}
+.sw{width:44px;height:44px;border-radius:50%;border:2px solid transparent;cursor:pointer;box-shadow:inset 0 0 0 2px rgba(0,0,0,.35)}
+.sw.on{border-color:var(--gold)}
+label.lab{display:block;font-size:13px;color:var(--ash);margin:14px 0 6px}
+textarea,input[type=text],input[type=search],select{width:100%;background:#170f1b;border:1px solid var(--line);border-radius:12px;color:var(--moon);padding:12px 14px;font-family:var(--serif);font-size:19px;min-height:48px}
+textarea{min-height:96px;resize:vertical}
+textarea:focus,input:focus,select:focus{outline:2px solid rgba(201,164,92,.5);outline-offset:1px}
+select{font-family:var(--ui);font-size:15px}
+.opt{display:block;width:100%;text-align:left;margin:8px 0;padding:12px 14px;border-radius:12px;border:1px solid var(--line);background:var(--plum);cursor:pointer;min-height:48px}
+.opt.on{border-color:var(--verdi);box-shadow:0 0 0 1px var(--verdi) inset}
+.opt .tag{font-family:var(--ui);font-style:normal;font-size:11px;color:var(--ash);display:block;margin-top:2px;letter-spacing:.02em}
+.opt .dv{font-size:19px;animation:none}
+
+/* candles */
+.cands{display:flex;gap:6px;flex-wrap:wrap;align-items:flex-end}
+.cand{width:12px;height:26px;position:relative}
+.cand i{position:absolute;bottom:0;left:2px;width:8px;height:14px;border-radius:2px;background:#3a2d3f}
+.cand b{position:absolute;bottom:14px;left:2px;width:8px;height:11px;border-radius:50% 50% 50% 50%/60% 60% 40% 40%;background:transparent;border:1px dashed #4a3a50}
+.cand.lit i{background:#e9dcc0}
+.cand.lit b{border:0;background:radial-gradient(circle at 50% 70%,#fff3c4,#C9A45C 60%,#9a6b20);box-shadow:0 0 10px 2px rgba(201,164,92,.55);animation:flick 1.8s ease-in-out infinite;transform-origin:50% 100%}
+@keyframes flick{0%,100%{transform:scaleY(1) rotate(0)}30%{transform:scaleY(1.12) rotate(-3deg)}60%{transform:scaleY(.92) rotate(2deg)}}
+.flame{animation:flick 1.9s ease-in-out infinite;transform-box:fill-box;transform-origin:50% 100%}
+
+/* demon */
+.stage{display:flex;justify-content:center;align-items:center;min-height:180px;position:relative}
+.stage::after{content:"";position:absolute;bottom:4px;left:15%;right:15%;height:28px;background:radial-gradient(closest-side,rgba(111,191,176,.18),transparent);filter:blur(4px)}
+.demon-svg{transition:filter .6s, transform .6s;overflow:visible}
+.hit{animation:hit .6s ease-out}
+@keyframes hit{0%{transform:translateX(0)}20%{transform:translateX(-8px) scale(.96)}40%{transform:translateX(7px)}60%{transform:translateX(-4px)}100%{transform:translateX(0)}}
+.floaty{animation:floaty 5s ease-in-out infinite}
+@keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+.whisper{text-align:center;margin:6px 6px 14px}
+
+/* spells */
+.spells{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:8px}
+.spell{position:relative;min-height:150px;border-radius:14px;border:1px solid rgba(201,164,92,.45);background:linear-gradient(160deg,#2b1a2f,#1a0f1d);padding:12px 10px;text-align:center;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;transition:transform .15s}
+.spell:active{transform:translateY(-6px) rotate(-2deg)}
+.spell .sn{font-family:var(--serif);font-weight:600;color:var(--gold);font-size:19px;line-height:1.1}
+.spell .sd{font-size:12px;color:var(--ash)}
+.spell .best{position:absolute;top:8px;right:8px;font-size:10px;color:var(--gold);border:1px solid rgba(201,164,92,.5);border-radius:10px;padding:1px 6px}
+.spell.cast{opacity:.45;border-style:dashed}
+.spell.cast::after{content:"lancé";position:absolute;bottom:8px;font-size:11px;color:var(--gold);letter-spacing:.1em}
+.enter{animation:enter .45s cubic-bezier(.2,.8,.2,1)}
+@keyframes enter{from{opacity:0;transform:translateY(40px) rotate(4deg) scale(.96)}to{opacity:1;transform:none}}
+
+/* fait/fantome */
+.frag{border:1px solid var(--line);border-radius:12px;padding:12px;margin:10px 0;background:#1a111e}
+.frag .ft{font-family:var(--serif);font-size:20px;margin-bottom:10px;font-style:italic;color:var(--verdi)}
+.frag.fait .ft{color:var(--gold);font-style:normal;font-weight:600}
+.frag .row .btn{flex:1}
+.frag .btn.sel-fait{border-color:var(--gold);color:var(--gold);background:rgba(201,164,92,.12)}
+.frag .btn.sel-fant{border-color:var(--verdi);color:var(--verdi);background:rgba(111,191,176,.1)}
+.evap{animation:evap 2.2s ease-in forwards}
+@keyframes evap{0%{opacity:1;filter:blur(0);transform:none}100%{opacity:.08;filter:blur(6px);transform:translateY(-18px) scale(1.04);letter-spacing:.08em}}
+
+/* balance */
+.bal{display:grid;grid-template-columns:1fr auto auto auto;gap:8px;align-items:center;margin:8px 0}
+.bal .v{min-width:56px;text-align:center;font-weight:600}
+.bal .btn{min-width:48px;padding:0}
+.bar{height:10px;border-radius:5px;background:#1a111e;overflow:hidden;display:flex;margin:10px 0}
+.bar span{display:block;height:100%}
+
+/* grimoire */
+.page{background:linear-gradient(180deg,#2a1d26,#20151f);border:1px solid rgba(201,164,92,.3);border-radius:4px 14px 14px 4px;padding:14px 14px 10px 18px;margin:12px 0;position:relative}
+.page::before{content:"";position:absolute;left:6px;top:10px;bottom:10px;width:1px;background:rgba(201,164,92,.35)}
+.page .meta{font-size:12px;color:var(--ash);display:flex;gap:8px;flex-wrap:wrap}
+.page .pt{font-family:var(--serif);color:var(--gold);font-size:20px;font-weight:600;margin:6px 0}
+.badge{font-size:11px;border:1px solid var(--line);border-radius:10px;padding:1px 7px}
+.pagepick{cursor:pointer}
+.pagepick.on{box-shadow:0 0 0 2px var(--gold)}
+
+/* misc */
+.banner{border:1px solid rgba(201,164,92,.4);background:rgba(201,164,92,.06);border-radius:14px;padding:12px 14px;margin:10px 0;font-size:14px}
+.tel{display:flex;align-items:center;gap:14px;text-decoration:none;color:var(--moon);background:var(--plum);border:1px solid var(--line);border-radius:14px;padding:14px;margin:10px 0;min-height:64px}
+.tel b{font-family:var(--ui);font-size:26px;color:var(--gold);min-width:84px}
+.breath{width:120px;height:120px;border-radius:50%;margin:20px auto;background:radial-gradient(circle,rgba(201,164,92,.35),rgba(201,164,92,.05) 70%);animation:breath 8s ease-in-out infinite}
+@keyframes breath{0%,100%{transform:scale(.7)}50%{transform:scale(1.1)}}
+.dots{display:flex;gap:6px;justify-content:center;margin:10px 0}
+.dots i{width:9px;height:9px;border-radius:50%;background:#3a2d3f}
+.dots i.on{background:var(--gold);box-shadow:0 0 6px rgba(201,164,92,.6)}
+.manor{width:100%;height:auto;display:block}
+.manor .room{cursor:pointer}
+.manor .room:hover rect.rbg{stroke:#C9A45C}
+.toggle{display:flex;justify-content:space-between;align-items:center;min-height:52px;border-bottom:1px solid var(--line)}
+.switch{width:52px;height:30px;border-radius:15px;background:#3a2d3f;border:0;position:relative;cursor:pointer}
+.switch::after{content:"";position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;background:var(--ash);transition:left .2s}
+.switch.on{background:var(--blood)}
+.switch.on::after{left:25px;background:var(--gold)}
+.fade{animation:fade .5s ease-out}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+hr.orn{border:0;height:14px;margin:18px 0;background:radial-gradient(circle,var(--ash) 1.5px,transparent 2px) center/14px 14px repeat-x;opacity:.5}
+
+.calm *,.calm *::before,.calm *::after{animation:none!important;transition:none!important}
+.calm .evap{opacity:.3;text-decoration:line-through}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .evap{opacity:.3;text-decoration:line-through}
+}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+"use strict";
+/* ============================================================
+   NOCTURNE — MVP jouable, 100 % local (localStorage)
+   ============================================================ */
+
+const TAME_MAX = 8;          // bougies pour apprivoiser un démon
+const CRYPT_UNLOCK = 8;      // bougies au total pour ouvrir la Crypte
+
+const ROOMS = [
+  {id:'atelier', name:"L’Atelier", dom:"le travail"},
+  {id:'bibliotheque', name:"La Bibliothèque", dom:"les études et l’apprentissage"},
+  {id:'salon', name:"Le Salon des miroirs", dom:"le regard des autres, les relations"},
+  {id:'tour', name:"La Tour", dom:"les projets perso, la création"},
+  {id:'crypte', name:"La Crypte", dom:"les vieilles blessures", locked:true},
+];
+const roomName = id => (ROOMS.find(r=>r.id===id)||{}).name || '';
+
+const DEMONS = {
+  dentelliere:{num:'I', name:"La Dentellière", profile:"La Perfectionniste",
+    desc:"Une araignée couturière qui détricote tout ce qui a un seul défaut.",
+    rule:"Tout doit être impeccable.", shame:"Un seul défaut = échec total.",
+    whisper:"Un seul défaut et tout est raté.",
+    phrases:[
+      {t:"Un seul défaut et tout est raté.", f:["Il y a un défaut","donc tout est raté"]},
+      {t:"J’ai fait une faute dans mon mail, ils vont croire que je bâcle tout.", f:["J’ai fait une faute dans mon mail","ils vont croire que je bâcle tout"]},
+      {t:"Ce n’est pas encore assez bien pour être envoyé.", f:["Je n’ai pas encore envoyé ce travail","il n’est pas assez bien"]},
+    ],
+    rituals:["Envoyer un travail « à 80 % »","Fixer une heure de fin et s’y tenir","Laisser volontairement une petite imperfection"],
+    familiar:{name:"Araignée d’argent", gift:"le sens du détail, mais en laisse"}, best:['fait','soeur']},
+  liche:{num:'II', name:"La Liche des Savoirs", profile:"L’Experte",
+    desc:"Une bibliothécaire squelette qui exige toujours un diplôme de plus.",
+    rule:"Je dois tout savoir avant d’agir.", shame:"Une question à laquelle je ne sais pas répondre.",
+    whisper:"Tu n’en sais pas assez. Encore une formation.",
+    phrases:[
+      {t:"Tu n’en sais pas assez. Encore une formation.", f:["Il y a des choses que je ne sais pas encore","je n’en sais pas assez pour agir","il me faut encore une formation"]},
+      {t:"Si on me pose une question et que je ne sais pas, je suis démasquée.", f:["On pourrait me poser une question dont je ne connais pas la réponse","si je ne sais pas, je suis démasquée"]},
+      {t:"Je ne coche pas tous les critères, je n’ai aucune chance.", f:["Je ne coche pas tous les critères de l’offre","je n’ai aucune chance"]},
+    ],
+    rituals:["Dire « je ne sais pas, je vais vérifier »","Postuler sans cocher 100 % des critères","Partager ce que tu sais déjà"],
+    familiar:{name:"Chouette-grimoire", gift:"la curiosité sans la peur"}, best:['miroir','fait']},
+  miroir:{num:'III', g:'m', name:"Le Miroir Fêlé", profile:"Le Génie naturel",
+    desc:"Un reflet qui se fissure dès que l’effort se voit.",
+    rule:"Si c’est dur, c’est que je ne suis pas douée.", shame:"Devoir faire des efforts.",
+    whisper:"Si tu dois forcer, c’est que tu n’es pas douée.",
+    phrases:[
+      {t:"Si tu dois forcer, c’est que tu n’es pas douée.", f:["Cette tâche me demande des efforts","donc je ne suis pas douée"]},
+      {t:"Les autres comprennent du premier coup, pas moi.", f:["J’ai eu besoin de relire plusieurs fois","les autres comprennent du premier coup","je suis lente"]},
+      {t:"Montrer un brouillon, c’est avouer que je ne sais pas faire.", f:["Mon travail est au stade de brouillon","le montrer prouve que je ne sais pas faire"]},
+    ],
+    rituals:["Commencer un truc difficile et noter ce que tu as appris, pas le résultat","Montrer un brouillon à quelqu’un","Écrire une chose que tu sais faire aujourd’hui et pas il y a un an"],
+    familiar:{name:"Éclat de miroir", gift:"un regard neuf sur ta progression"}, best:['soeur','balance']},
+  gargouille:{num:'IV', name:"La Gargouille Recluse", profile:"La Soliste",
+    desc:"Une statue qui mure les portes du Manoir.",
+    rule:"Je dois y arriver seule.", shame:"Avoir besoin d’aide.",
+    whisper:"Si tu demandes de l’aide, ils verront que tu es une fraude.",
+    phrases:[
+      {t:"Si tu demandes de l’aide, ils verront que tu es une fraude.", f:["J’ai besoin d’aide sur ce dossier","si je demande, ils verront que je suis une fraude"]},
+      {t:"Je dois y arriver seule, sinon ça ne compte pas.", f:["J’ai reçu de l’aide sur ce projet","donc la réussite ne compte pas"]},
+      {t:"Je vais déranger tout le monde avec ma question.", f:["J’ai une question","je vais déranger tout le monde"]},
+    ],
+    rituals:["Demander de l’aide à une personne","Accepter une aide proposée","Dire qui t’a aidée, sans te diminuer"],
+    familiar:{name:"Petite gargouille d’épaule", gift:"une porte qui reste ouverte"}, best:['balance','soeur']},
+  hydre:{num:'V', name:"L’Hydre aux Mille Bras", profile:"La Superwoman",
+    desc:"Chaque « oui » lui fait pousser une tête.",
+    rule:"Je dois exceller partout, tout le temps.", shame:"Dire non, se reposer.",
+    whisper:"Si tu ralentis, tout s’effondre.",
+    phrases:[
+      {t:"Si tu ralentis, tout s’effondre.", f:["J’ai beaucoup de choses en cours","si je ralentis, tout s’effondre"]},
+      {t:"Une bonne collègue, une bonne amie ne dit jamais non.", f:["On m’a demandé un service de plus","dire non ferait de moi quelqu’un de mauvais"]},
+      {t:"Me reposer, c’est perdre du temps.", f:["Je suis fatiguée","me reposer, c’est perdre du temps"]},
+    ],
+    rituals:["Dire non à une demande","Déléguer une tâche","20 minutes de pause sans rien produire"],
+    familiar:{name:"Serpent à une tête", gift:"l’énergie choisie"}, best:['fait','soeur']},
+  chuchoteuses:{num:'VI', g:'pl', name:"Les Chuchoteuses", profile:"La disqualification du succès",
+    desc:"Une nuée de chauves-souris qui volent les compliments.",
+    rule:"Mes réussites ne viennent pas de moi.", shame:"Recevoir un compliment.",
+    whisper:"C’était de la chance. Ils sont juste gentils.",
+    phrases:[
+      {t:"C’était de la chance. Ils sont juste gentils.", f:["On m’a félicitée","c’était de la chance","ils sont juste gentils"]},
+      {t:"J’ai eu le poste parce qu’il n’y avait personne d’autre.", f:["J’ai obtenu le poste","il n’y avait personne d’autre"]},
+      {t:"Ce compliment, il le fait à tout le monde.", f:["On m’a fait un compliment","il le fait à tout le monde"]},
+    ],
+    rituals:["Recevoir un compliment et dire seulement « merci »","Écrire un compliment reçu dans le Grimoire le soir même","Relire trois pages du Grimoire avant de dormir"],
+    familiar:{name:"Chauve-souris messagère", gift:"une messagère qui te rapporte les compliments"}, best:['balance','miroir']},
+};
+const voc = d => d.name.replace(/^(La |Le |Les |L’)/,'');
+const mid = d => d.name.replace(/^(La|Le|Les|L’)/, m=>m.toLowerCase());
+const V = (d,f,m,p) => d && d.g==='pl' ? p : d && d.g==='m' ? (m ?? f) : f;
+const ORDER = ['dentelliere','liche','miroir','gargouille','hydre','chuchoteuses'];
+const YOUNG = ['dentelliere','liche','miroir','gargouille','hydre'];
+const SPECTRE = {name:"Le Spectre du Lieu", whisper:"Tu n’as pas ta place ici.",
+  desc:"Une silhouette qui ne vient pas d’elle. Elle vient de quelqu’un d’autre.",
+  rituals:["Noter les faits : qui, quoi, quand, avec quels mots","En parler à une alliée de confiance","Chercher un réseau ou une mentore"]};
+
+const SPELLS = {
+  fait:{name:"Fait ou Fantôme", d:"Trier les faits des ressentis", glyph:'eye'},
+  soeur:{name:"Voix de la Sœur", d:"Te parler comme à ta meilleure amie", glyph:'heart'},
+  miroir:{name:"Miroir des preuves", d:"Invoquer une page du Grimoire", glyph:'book'},
+  balance:{name:"Balance des causes", d:"Rendre à un succès sa vraie part", glyph:'scale'},
+};
+
+const QUIZ = [
+  {d:'dentelliere', t:"Quand je rends un travail, je ne vois que ce qui manque."},
+  {d:'liche', t:"Avant d’agir, j’ai besoin d’en savoir plus que tout le monde."},
+  {d:'miroir', t:"Si quelque chose me demande des efforts, je me sens moins capable."},
+  {d:'gargouille', t:"Demander de l’aide me donne l’impression de tricher."},
+  {d:'hydre', t:"Je dois être à la hauteur partout : travail, proches, maison."},
+  {d:'dentelliere', t:"Une petite erreur peut me gâcher toute une réussite."},
+  {d:'liche', t:"J’hésite à postuler si je ne coche pas tous les critères."},
+  {d:'miroir', t:"J’ai honte quand on me voit apprendre ou galérer."},
+  {d:'gargouille', t:"Une réussite partagée compte moins à mes yeux."},
+  {d:'hydre', t:"Me reposer sans rien produire me rend coupable."},
+];
+const ROMAN = ['I','II','III','IV','V','VI','VII','VIII','IX','X'];
+
+const SKINS = ['#f3d6c1','#e3b48f','#c68a62','#9a6142','#6e4128','#43271a'];
+const HAIRC = ['#141014','#3b2418','#7a4a2a','#b98a52','#d8d0c4','#7A1430','#3d2a6b'];
+const EYES  = ['#3a2616','#6b4a2f','#4f6b3a','#3e5f7a','#8a8f96'];
+const HAIRS = [['long','Longs'],['undercut','Undercut'],['tresses','Tresses'],['rase','Crâne rasé']];
+const BODIES = [['fine','Fine'],['moyenne','Moyenne'],['ronde','Ronde']];
+
+/* ---------- état ---------- */
+const KEY = 'nocturne.v1';
+function blank(){
+  return {v:1, profile:null,
+    demons:Object.fromEntries(ORDER.map(id=>[id,{tame:0,phrases:[],familiar:false}])),
+    rooms:{atelier:0,bibliotheque:0,salon:0,tour:0,crypte:0},
+    vigils:[], rituals:[], proofs:[], spectre:0, lastSeen:null,
+    settings:{vibrate:true, calm:false}};
+}
+function load(){
+  try{
+    const r = JSON.parse(localStorage.getItem(KEY));
+    if(r && r.v===1){ const b=blank();
+      return {...b,...r, demons:{...b.demons,...r.demons}, rooms:{...b.rooms,...r.rooms}, settings:{...b.settings,...r.settings}}; }
+  }catch(e){}
+  return blank();
+}
+let S = load();
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){} }
+
+const today = () => new Date().toLocaleDateString('sv');
+const fmt = d => new Date(d+'T12:00:00').toLocaleDateString('fr-FR',{day:'numeric',month:'long'});
+const uid = () => Math.random().toString(36).slice(2,10);
+const esc = s => String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const norm = s => String(s||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[’']/g,"'");
+const buzz = (p=30) => { if(S.settings.vibrate && navigator.vibrate) try{navigator.vibrate(p)}catch(e){} };
+const totalCandles = () => Object.values(S.rooms).reduce((a,b)=>a+b,0);
+const cryptOpen = () => totalCandles() >= CRYPT_UNLOCK;
+
+/* ---------- garde-fou détresse ---------- */
+const DISTRESS = ['suicid','me tuer','me suicider','envie de mourir','veux mourir','vouloir mourir','en finir','plus envie de vivre',
+  'me faire du mal','mettre fin a mes jours','mettre fin a ma vie','je veux disparaitre','disparaitre pour toujours','me pendre',
+  'plus la force de vivre','a quoi bon vivre','me scarifier','me couper les veines','personne ne me regretterait','mieux sans moi',
+  'me jeter sous','sauter du pont','sauter par la fenetre','je veux crever','envie de crever'];
+function isDistress(...txts){ const t = norm(txts.join(' ')); return DISTRESS.some(w=>t.includes(w)); }
+function guard(...txts){ if(isDistress(...txts)){ ui.distressFrom = ui.screen; go('distress'); return true; } return false; }
+
+/* ---------- UI state ---------- */
+const ui = {screen: S.profile ? 'home' : 'welcome'};
+function defaultDraft(){ return {name:'Morgane', skin:SKINS[2], hair:'long', hairColor:HAIRC[0], eye:EYES[1], veil:false, body:'moyenne'}; }
+
+/* ============================================================
+   SVG
+   ============================================================ */
+function morganeSVG(p, h=220){
+  p = p || defaultDraft();
+  const sk=p.skin, hc=p.hairColor, w=({fine:0,moyenne:4,ronde:9})[p.body]??4;
+  let back='', front='';
+  if(p.veil){
+    back = `<path d="M40 50 Q38 22 60 21 Q82 22 80 50 L86 88 Q60 100 34 88 Z" fill="#2a1830" stroke="#C9A45C" stroke-width=".7"/>`;
+    front = `<path d="M46 40 Q60 27 74 40 Q60 34 46 40Z" fill="#2a1830"/>`;
+  } else if(p.hair==='long'){
+    back = `<path d="M45 44 Q44 25 60 25 Q76 25 75 44 L80 98 Q70 92 67 70 L53 70 Q50 92 40 98 Z" fill="${hc}"/>`;
+    front = `<path d="M46 43 Q48 27 62 28 Q75 30 75 43 Q67 34 57 37 Q50 39 46 43Z" fill="${hc}"/>`;
+  } else if(p.hair==='undercut'){
+    front = `<path d="M47 37 Q47 31 50 30 L50 44 Q48 42 47 37Z" fill="${hc}" opacity=".35"/><path d="M48 38 Q50 24 64 26 Q78 29 76 44 Q73 33 64 33 Q55 33 51 41 Z" fill="${hc}"/>`;
+  } else if(p.hair==='tresses'){
+    let b='';
+    for(let i=0;i<6;i++){ b+=`<ellipse cx="${47-i*.3}" cy="${60+i*9}" rx="4" ry="5.5" fill="${hc}"/><ellipse cx="${73+i*.3}" cy="${60+i*9}" rx="4" ry="5.5" fill="${hc}"/>`; }
+    back = b;
+    front = `<path d="M46 42 Q48 27 60 27 Q72 27 74 42 Q66 33 60 33 Q54 33 46 42Z" fill="${hc}"/>`;
+  } else {
+    front = `<path d="M48 40 Q48 30 60 30 Q72 30 72 40 Q60 34 48 40Z" fill="${hc}" opacity=".45"/>`;
+  }
+  const runes = (x1,y1,x2,y2) => { let r=''; for(let i=1;i<4;i++){ const x=x1+(x2-x1)*i/4, y=y1+(y2-y1)*i/4; r+=`<path d="M${x-2} ${y-1} l2 -2 l2 2 M${x} ${y-3} v4" stroke="#C9A45C" stroke-width=".9" fill="none"/>`; } return r; };
+  return `<svg viewBox="0 0 120 205" height="${h}" aria-label="Morgane" role="img" style="overflow:visible">
+  <defs><radialGradient id="lg" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#ffe9a8"/><stop offset=".5" stop-color="#C9A45C" stop-opacity=".6"/><stop offset="1" stop-color="#C9A45C" stop-opacity="0"/></radialGradient></defs>
+  <ellipse cx="60" cy="200" rx="40" ry="4" fill="#000" opacity=".5"/>
+  <g stroke="#ECE6DA" stroke-opacity=".28" stroke-width=".7">${back}</g>
+  <path d="M${44-w} 66 Q60 60 ${76+w} 66 L${88+w*1.4} 194 L${32-w*1.4} 194 Z" fill="#15101a" stroke="#3b2844" stroke-width="1"/>
+  <path d="M60 70 L60 194" stroke="#2a1c30" stroke-width="1"/>
+  <path d="M${50-w/2} 92 L${70+w/2} 92 L${72+w/2} 120 L${48-w/2} 120Z" fill="#7A1430"/>
+  <path d="M56 96 l8 4 M64 96 l-8 4 M56 104 l8 4 M64 104 l-8 4 M56 112 l8 4 M64 112 l-8 4" stroke="#ECE6DA" stroke-width=".5" opacity=".6"/>
+  <rect x="55" y="54" width="10" height="12" fill="${sk}"/>
+  <path d="M46 58 L42 72 L60 80 L78 72 L74 58 L60 70 Z" fill="#1f1524" stroke="#3b2844" stroke-width=".8"/>
+  <path d="M${45-w} 70 L${36-w} 114" stroke="#15101a" stroke-width="11" stroke-linecap="round"/>
+  <path d="M${36-w} 114 L${33-w} 140" stroke="${sk}" stroke-width="7" stroke-linecap="round"/>
+  ${runes(36-w,114,33-w,140)}
+  <path d="M${75+w} 70 L${84+w} 114" stroke="#15101a" stroke-width="11" stroke-linecap="round"/>
+  <path d="M${84+w} 114 L${88+w} 138" stroke="${sk}" stroke-width="7" stroke-linecap="round"/>
+  ${runes(84+w,114,88+w,138)}
+  <circle cx="${33-w}" cy="141" r="1.6" fill="#ccc"/>
+  <line x1="${88+w}" y1="139" x2="${90+w}" y2="148" stroke="#C9A45C" stroke-width="1"/>
+  <circle cx="${90+w}" cy="156" r="14" fill="url(#lg)" class="flame"/>
+  <path d="M${85+w} 148 h10 l-1 14 h-8 z" fill="none" stroke="#C9A45C" stroke-width="1.2"/>
+  <ellipse cx="${90+w}" cy="156" rx="2" ry="3" fill="#fff3c4" class="flame"/>
+  <rect x="${67+w/2}" y="118" width="10" height="13" rx="1" fill="#4c0a1d" stroke="#C9A45C" stroke-width=".7"/>
+  <rect x="46" y="186" width="11" height="10" rx="1.5" fill="#0b080d"/><rect x="63" y="186" width="11" height="10" rx="1.5" fill="#0b080d"/>
+  <ellipse cx="60" cy="44" rx="12" ry="14" fill="${sk}"/>
+  <path d="M52 43 h5.5 l2 -1.6" stroke="#0E0B10" stroke-width="1.3" fill="none"/>
+  <path d="M68 43 h-5.5 l-2 -1.6" stroke="#0E0B10" stroke-width="1.3" fill="none"/>
+  <circle cx="55" cy="44" r="1.2" fill="${p.eye}"/><circle cx="65" cy="44" r="1.2" fill="${p.eye}"/>
+  <path d="M56.5 52 Q60 54.3 63.5 52 Q60 50.8 56.5 52Z" fill="#4a0f22"/>
+  <g stroke="#ECE6DA" stroke-opacity=".28" stroke-width=".6">${front}</g>
+  </svg>`;
+}
+
+function eyeDot(cx,cy,r,col,fam){ const R=fam?r*1.7:r; return `<circle cx="${cx}" cy="${cy}" r="${R}" fill="${col}"/><circle cx="${cx+R*.35}" cy="${cy-R*.35}" r="${R*.38}" fill="#ECE6DA" opacity=".85"/>`; }
+const DRAW = {
+  dentelliere(c,e,h,f){ const st=`fill="${c}" fill-opacity=".16" stroke="${c}" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"`;
+    let legs=''; for(let i=0;i<4;i++){ legs+=`<polyline points="${82} ${96+i*10} ${46-i*5} ${66+i*18} ${30-i*2} ${112+i*20}" fill="none" stroke="${c}" stroke-width="2.4" stroke-linejoin="round"/><polyline points="${118} ${96+i*10} ${154+i*5} ${66+i*18} ${170+i*2} ${112+i*20}" fill="none" stroke="${c}" stroke-width="2.4" stroke-linejoin="round"/>`; }
+    return `<line x1="100" y1="-10" x2="100" y2="58" stroke="${c}" stroke-width="1" opacity=".6"/>${legs}
+    <ellipse cx="100" cy="120" rx="27" ry="33" ${st}/>
+    <path d="M86 112 q14 10 28 0 M88 126 q12 9 24 0 M90 139 q10 7 20 0" fill="none" stroke="${c}" stroke-width="1.2" opacity=".7"/>
+    <circle cx="100" cy="76" r="18" ${st}/>
+    <path d="M86 66 Q100 54 114 66 Q106 62 100 63 Q92 63 86 66Z" fill="${h}"/>
+    ${eyeDot(93,77,3.4,e,f)}${eyeDot(107,77,3.4,e,f)}${f?'':eyeDot(97,69,1.7,e,f)+eyeDot(103,69,1.7,e,f)}`; },
+  liche(c,e,h,f){ const st=`fill="${c}" fill-opacity=".16" stroke="${c}" stroke-width="2.4" stroke-linejoin="round"`;
+    return `<path d="M58 192 L76 98 Q100 84 124 98 L142 192 Z" ${st}/>
+    <path d="M68 104 Q66 40 100 34 Q134 40 132 104 Q100 90 68 104 Z" ${st}/>
+    <path d="M80 58 Q100 40 120 58" fill="none" stroke="${h}" stroke-width="3"/>
+    <ellipse cx="100" cy="73" rx="18" ry="21" fill="${c}" fill-opacity=".3" stroke="${c}" stroke-width="2"/>
+    <ellipse cx="92" cy="71" rx="5" ry="5.5" fill="#0E0B10"/><ellipse cx="108" cy="71" rx="5" ry="5.5" fill="#0E0B10"/>
+    ${eyeDot(92,71,2.6,e,f)}${eyeDot(108,71,2.6,e,f)}
+    <path d="M92 88 v6 M100 89 v6 M108 88 v6" stroke="${c}" stroke-width="1.6"/>
+    <rect x="72" y="122" width="56" height="36" rx="3" ${st}/><line x1="100" y1="122" x2="100" y2="158" stroke="${c}" stroke-width="2"/>
+    <path d="M78 132 h16 M78 140 h16 M106 132 h16 M106 140 h16" stroke="${c}" stroke-width="1" opacity=".7"/>
+    <path d="M66 126 l8 4 M134 126 l-8 4" stroke="${c}" stroke-width="2"/>`; },
+  miroir(c,e,h,f){ const st=`fill="${c}" fill-opacity=".1" stroke="${c}" stroke-linejoin="round"`;
+    if(f) return `<path d="M100 40 L134 92 L110 170 L76 120 Z" ${st} stroke-width="3"/><path d="M100 40 L110 170" stroke="${c}" stroke-width="1" opacity=".5"/>${eyeDot(104,100,6,e,true)}`;
+    return `<ellipse cx="100" cy="102" rx="54" ry="74" fill="none" stroke="${c}" stroke-width="5"/>
+    <ellipse cx="100" cy="102" rx="44" ry="63" ${st} stroke-width="1.5"/>
+    <path d="M86 22 q14 -16 28 0" fill="none" stroke="${c}" stroke-width="3"/>
+    <polyline points="114 40 98 72 118 94 90 130 106 170" fill="none" stroke="${c}" stroke-width="1.8"/>
+    <path d="M98 72 L80 80 M118 94 L136 100" fill="none" stroke="${c}" stroke-width="1.2"/>
+    <path d="M70 96 Q86 84 102 96 Q86 108 70 96Z" fill="#0E0B10" stroke="${c}" stroke-width="1.6"/>${eyeDot(86,96,6,e,false)}
+    <path d="M70 120 q8 30 -4 50" fill="none" stroke="${h}" stroke-width="2.5" opacity=".8"/>
+    ${eyeDot(122,124,3,e,false)}`; },
+  gargouille(c,e,h,f){ const st=`fill="${c}" fill-opacity=".16" stroke="${c}" stroke-width="2.4" stroke-linejoin="round"`;
+    return `<path d="M62 84 L20 50 L34 94 L12 106 L58 116 Z" ${st}/><path d="M138 84 L180 50 L166 94 L188 106 L142 116 Z" ${st}/>
+    <path d="M64 170 Q56 112 80 94 Q100 84 120 94 Q144 112 136 170 Z" ${st}/>
+    <path d="M80 96 Q76 60 100 58 Q124 60 120 96 Q100 104 80 96 Z" ${st}/>
+    <path d="M84 66 L74 38 L92 60 M116 66 L126 38 L108 60" fill="none" stroke="${c}" stroke-width="2.4"/>
+    <path d="M88 62 Q100 54 112 62" fill="none" stroke="${h}" stroke-width="3"/>
+    ${eyeDot(92,79,3.6,e,f)}${eyeDot(108,79,3.6,e,f)}
+    <path d="M93 90 q7 4 14 0" fill="none" stroke="${c}" stroke-width="1.6"/>
+    <path d="M76 160 l-4 10 M84 160 l0 10 M124 160 l4 10 M116 160 l0 10" stroke="${c}" stroke-width="2"/>
+    <rect x="56" y="170" width="88" height="14" ${st}/>`; },
+  hydre(c,e,h,f){ const st=`fill="${c}" fill-opacity=".18" stroke="${c}" stroke-width="2.2" stroke-linejoin="round"`;
+    const heads = f ? [[100,52]] : [[38,74],[66,42],[100,28],[134,42],[162,74]];
+    let s=`<ellipse cx="100" cy="162" rx="48" ry="26" ${st}/>`;
+    heads.forEach(([x,y])=>{ s+=`<path d="M${100+(x-100)*.35} 146 Q${x+(100-x)*.1} ${y+60} ${x} ${y+9}" fill="none" stroke="${c}" stroke-width="7" stroke-opacity=".55" stroke-linecap="round"/>`; });
+    heads.forEach(([x,y],i)=>{ s+=`<ellipse cx="${x}" cy="${y}" rx="12" ry="9" ${st}/>${i===2||f?`<path d="M${x-8} ${y-8} q8 -6 16 0" fill="none" stroke="${h}" stroke-width="2.5"/>`:''}${eyeDot(x-4,y-1,2.2,e,f)}${eyeDot(x+4,y-1,2.2,e,f)}`; });
+    return s; },
+  chuchoteuses(c,e,h,f){
+    const pos = f ? [[100,104,3.2]] : [[60,60,1],[140,52,1.1],[100,96,1.4],[46,128,.9],[152,132,1],[104,160,.8]];
+    return pos.map(([x,y,k])=>`<g transform="translate(${x} ${y}) scale(${k})"><path d="M0 0 C-8 -10 -20 -10 -30 -4 C-24 0 -22 6 -24 10 C-16 6 -10 8 -6 12 C-4 6 0 4 0 4 C0 4 4 6 6 12 C10 8 16 6 24 10 C22 6 24 0 30 -4 C20 -10 8 -10 0 0Z" fill="${c}" fill-opacity=".25" stroke="${c}" stroke-width="1.6" stroke-linejoin="round"/><path d="M-4 -4 l1 -5 l3 3 l3 -3 l1 5" fill="${h}"/>${eyeDot(-2.5,0,1.5,e,f)}${eyeDot(2.5,0,1.5,e,f)}</g>`).join(''); },
+  spectre(c){ return `<path d="M100 26 Q78 26 76 58 Q58 100 62 192 L138 192 Q142 100 124 58 Q122 26 100 26Z" fill="${c}" fill-opacity=".35" stroke="${c}" stroke-width="2"/>
+    <path d="M90 56 h7 M103 56 h7" stroke="#0E0B10" stroke-width="2.5"/><path d="M62 192 q10 -8 19 0 q10 -8 19 0 q10 -8 19 0 q10 -8 19 0" fill="none" stroke="${c}" stroke-width="2"/>`; },
+  ouroboros(c){ return `<circle cx="100" cy="104" r="56" fill="none" stroke="${c}" stroke-width="12" stroke-opacity=".35"/><circle cx="100" cy="104" r="56" fill="none" stroke="${c}" stroke-width="1.5" stroke-dasharray="4 6"/><path d="M146 70 l18 -6 l-6 18 z" fill="${c}" fill-opacity=".5"/>`; },
+};
+function demonSVG(id, o={}){
+  const {size=170, familiar=false, shrink=0, cls=''} = o;
+  const d = S.demons[id]; const tame = o.tame ?? (d ? d.tame : 0);
+  const eye = (S.profile&&S.profile.eye) || '#6FBFB0', hair = (S.profile&&S.profile.hairColor) || '#2a2030';
+  const sc = familiar ? .66 : Math.max(.42, 1 - (tame/TAME_MAX)*.35 - shrink);
+  const blur = familiar ? 0 : Math.max(0, 2.4 - tame*.28 - shrink*5);
+  const col = (id==='spectre'||id==='ouroboros') ? '#8C8391' : '#6FBFB0';
+  return `<svg viewBox="0 0 200 200" width="${size}" height="${size}" class="demon-svg ${cls}" style="filter:${blur>0?`blur(${blur.toFixed(2)}px)`:'none'}" aria-hidden="true"><g transform="translate(100 105) scale(${sc.toFixed(3)}) translate(-100 -105)">${DRAW[id](col,eye,hair,familiar)}</g></svg>`;
+}
+
+const GLYPH = {
+  eye:`<path d="M4 24 Q24 6 44 24 Q24 42 4 24Z" fill="none" stroke="#C9A45C" stroke-width="2.4"/><circle cx="24" cy="24" r="6" fill="#C9A45C"/>`,
+  heart:`<path d="M24 40 C8 28 6 18 12 12 C17 7 22 10 24 15 C26 10 31 7 36 12 C42 18 40 28 24 40Z" fill="none" stroke="#C9A45C" stroke-width="2.4"/>`,
+  book:`<path d="M8 10 h14 q2 0 2 2 v28 q0 -2 -2 -2 h-14Z M40 10 h-14 q-2 0 -2 2 v28 q0 -2 2 -2 h14Z" fill="none" stroke="#C9A45C" stroke-width="2.2" stroke-linejoin="round"/>`,
+  scale:`<path d="M24 6 v34 M12 40 h24 M8 14 h32 M8 14 l-5 12 h10z M40 14 l-5 12 h10z" fill="none" stroke="#C9A45C" stroke-width="2.2" stroke-linejoin="round"/>`,
+  candle:`<path d="M19 22 h10 v20 h-10z" fill="none" stroke="#C9A45C" stroke-width="2.2"/><path class="flame" d="M24 6 C30 12 29 18 24 19 C19 18 18 12 24 6Z" fill="#C9A45C"/>`,
+  moon:`<path d="M30 6 A18 18 0 1 0 42 32 A14 14 0 1 1 30 6Z" fill="none" stroke="#C9A45C" stroke-width="2.4"/>`,
+  key:`<circle cx="16" cy="24" r="8" fill="none" stroke="#C9A45C" stroke-width="2.4"/><path d="M24 24 h18 M36 24 v7 M41 24 v5" stroke="#C9A45C" stroke-width="2.4"/>`,
+};
+const seal = (action, glyph, label, attrs='', small=false) =>
+  `<div class="sealwrap"><button class="seal ${small?'small':''}" data-a="${action}" ${attrs} aria-label="${esc(label)}"><svg viewBox="0 0 48 48">${GLYPH[glyph]}</svg></button><div class="seal-label">${label}</div></div>`;
+const candles = (n, max) => `<div class="cands" aria-label="${n} bougie${n>1?'s':''} sur ${max}">${Array.from({length:max},(_,i)=>`<span class="cand ${i<n?'lit':''}"><i></i><b></b></span>`).join('')}</div>`;
+
+function manorSVG(){
+  const R = S.rooms, tot = totalCandles(), open = cryptOpen();
+  const room = (id,x,y,w,h) => {
+    const n = R[id]||0, locked = id==='crypte' && !open;
+    const glow = Math.min(.55, n*.07);
+    const max = Math.max(1, Math.floor((w-16)/11));
+    let c=''; for(let i=0;i<Math.min(n,max);i++){ const cx=x+12+i*11; c+=`<rect x="${cx-2}" y="${y+h-13}" width="4" height="8" fill="#e9dcc0"/><ellipse class="flame" style="animation-delay:${(i*.37)%1.8}s" cx="${cx}" cy="${y+h-16.5}" rx="2.3" ry="3.6" fill="#C9A45C"/>`; }
+    if(n>max) c+=`<text x="${x+w-8}" y="${y+h-7}" text-anchor="end" font-size="9" fill="#C9A45C" font-family="Inter">+${n-max}</text>`;
+    const label = ROOMS.find(r=>r.id===id).name;
+    return `<g class="room" ${locked?'data-a="lockedCrypt"':`data-a="vigil" data-room="${id}"`} role="button" aria-label="${esc(label)}${locked?' (scellée)':''}">
+      <rect class="rbg" x="${x}" y="${y}" width="${w}" height="${h}" fill="#120c15" stroke="#3d2a45" stroke-width="1.2"/>
+      <rect x="${x}" y="${y}" width="${w}" height="${h}" fill="url(#roomglow)" opacity="${glow}"/>
+      <path d="M${x+w/2-9} ${y+h-4} v-${h*.42} a9 9 0 0 1 18 0 v${h*.42}" fill="none" stroke="#2b1e31" stroke-width="1.2"/>
+      ${c}
+      <text x="${x+w/2}" y="${y+16}" text-anchor="middle" font-size="11" fill="${locked?'#5b5060':'#ECE6DA'}" font-family="Cormorant Garamond, serif" font-weight="600">${esc(label)}</text>
+      ${locked?`<path d="M${x+8} ${y+8} L${x+w-8} ${y+h-8} M${x+w-8} ${y+8} L${x+8} ${y+h-8}" stroke="#3d2a45" stroke-width="1.5" stroke-dasharray="3 3"/><text x="${x+w/2}" y="${y+h/2+12}" text-anchor="middle" font-size="9" fill="#8C8391" font-family="Inter">scellée — ${CRYPT_UNLOCK-tot} bougie${CRYPT_UNLOCK-tot>1?'s':''}</text>`:''}
+    </g>`;
+  };
+  const shards = Math.min(6, Math.floor(tot/2));
+  let glass=''; for(let i=0;i<6;i++){ const a0=i*60*Math.PI/180, a1=(i+1)*60*Math.PI/180, r=13;
+    const ok=i<shards; glass+=`<path d="M170 36 L${170+r*Math.cos(a0)} ${36+r*Math.sin(a0)} A${r} ${r} 0 0 1 ${170+r*Math.cos(a1)} ${36+r*Math.sin(a1)} Z" fill="${ok?(i%2?'#7A1430':'#C9A45C'):'#1a141d'}" fill-opacity="${ok?.85:1}" stroke="#0E0B10" stroke-width="1"/>`; }
+  return `<svg class="manor" viewBox="0 0 340 430" role="group" aria-label="Le Manoir intérieur">
+  <defs><radialGradient id="roomglow" cx=".5" cy=".85" r=".8"><stop offset="0" stop-color="#C9A45C"/><stop offset="1" stop-color="#C9A45C" stop-opacity="0"/></radialGradient>
+  <radialGradient id="moon" cx=".5" cy=".5" r=".5"><stop offset=".6" stop-color="#ECE6DA"/><stop offset="1" stop-color="#ECE6DA" stop-opacity="0"/></radialGradient></defs>
+  <circle cx="292" cy="44" r="26" fill="url(#moon)" opacity=".85"/>
+  <path d="M10 360 q30 -30 50 -6 q16 -24 40 -4 M280 362 q20 -26 46 -4" fill="none" stroke="#2b3a3a" stroke-width="2"/>
+  <polygon points="24,178 170,108 316,178" fill="#1a1220" stroke="#3d2a45"/>
+  <rect x="138" y="52" width="64" height="74" fill="#1a1220" stroke="#3d2a45"/>
+  <polygon points="132,56 170,6 208,56" fill="#1a1220" stroke="#3d2a45"/>
+  <circle cx="170" cy="36" r="14" fill="none" stroke="#3d2a45" stroke-width="2"/>${glass}
+  <rect x="30" y="176" width="280" height="168" fill="#1a1220" stroke="#3d2a45"/>
+  ${room('tour',144,62,52,58)}
+  ${room('atelier',38,184,128,74)}
+  ${room('bibliotheque',174,184,128,74)}
+  ${room('salon',38,264,264,74)}
+  <line x1="10" y1="346" x2="330" y2="346" stroke="#3d2a45" stroke-width="2"/>
+  ${room('crypte',84,352,172,62)}
+  <ellipse cx="170" cy="348" rx="170" ry="10" fill="#6FBFB0" opacity=".06"/>
+  <ellipse cx="60" cy="350" rx="80" ry="7" fill="#ECE6DA" opacity=".05"/>
+  </svg>`;
+}
+
+const NAVICON = {
+  home:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 11 L12 4 L21 11 V20 H3Z"/><path d="M10 20 v-5 a2 2 0 0 1 4 0 v5"/></svg>`,
+  grim:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M5 4 h11 a3 3 0 0 1 3 3 v13 H8 a3 3 0 0 1 -3 -3Z"/><path d="M5 17 a3 3 0 0 1 3 -3 h11"/></svg>`,
+  best:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M12 8 l2 3 l-2 3 l-2 -3Z"/></svg>`,
+  me:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="8" r="4"/><path d="M4 21 c1 -5 4 -7 8 -7 s7 2 8 7"/></svg>`,
+};
+
+/* ============================================================
+   ÉCRANS
+   ============================================================ */
+const SCREENS = {};
+
+SCREENS.welcome = () => `
+  <div class="center fade" style="padding-top:20px">
+    <h1>Nocturne</h1>
+    <p class="her" style="margin-top:12px">On ne tue pas ses démons.<br>On les apprivoise.</p>
+    <div style="margin:18px 0">${morganeSVG(defaultDraft(),220)}</div>
+  </div>
+  <div class="card">
+    <p style="margin-top:0">Chaque soir, quelques minutes : une voix d’imposteur sort des murs du Manoir, tu la nommes, tu lui lances 2 ou 3 sorts, et elle te laisse un <span class="gold">rituel à faire dans la vraie vie</span>. Ce sont ces actes qui changent les choses.</p>
+    <p class="small muted" style="margin-bottom:0">NOCTURNE accompagne, il ne soigne pas : ce n’est <b>ni un diagnostic ni une thérapie</b>. Tout reste sur ton téléphone, rien n’est envoyé en ligne.</p>
+  </div>
+  ${seal('startOnb','moon','Entrer')}`;
+
+SCREENS.profile = () => {
+  const d = ui.draft, edit = ui.editing;
+  const sw = (k,list) => `<div class="row">${list.map(c=>`<button class="sw ${d[k]===c?'on':''}" style="background:${c}" data-a="draft" data-k="${k}" data-v="${c}" aria-label="${k} ${c}"></button>`).join('')}</div>`;
+  const chips = (k,list) => `<div class="row">${list.map(([v,l])=>`<button class="chip ${d[k]===v?'on':''}" data-a="draft" data-k="${k}" data-v="${v}">${l}</button>`).join('')}</div>`;
+  return `
+  ${edit?`<button class="back" data-a="go" data-to="me">← Retour</button>`:''}
+  <h2>${edit?'Ton apparence':'Qui garde le Manoir ?'}</h2>
+  <p class="muted small">Elle doit te ressembler. Tout se change plus tard.</p>
+  <div class="center">${morganeSVG(d,200)}</div>
+  <label class="lab" for="nm">Prénom</label>
+  <input id="nm" type="text" maxlength="24" data-bind="draft.name" value="${esc(d.name)}" autocomplete="off">
+  <label class="lab">Peau</label>${sw('skin',SKINS)}
+  <label class="lab">Morphologie</label>${chips('body',BODIES)}
+  <label class="lab">Coiffure</label>${chips('hair',HAIRS)}
+  <div class="row" style="margin-top:10px"><button class="chip ${d.veil?'on':''}" data-a="draft" data-k="veil" data-v="${d.veil?'false':'true'}">${d.veil?'✓ ':''}Voile</button></div>
+  <label class="lab">Cheveux</label>${sw('hairColor',HAIRC)}
+  <label class="lab">Yeux <span class="small">(tes démons les auront aussi)</span></label>${sw('eye',EYES)}
+  ${seal('saveDraft', edit?'candle':'key', edit?'Garder':'Continuer')}`;
+};
+
+SCREENS.quiz = () => {
+  const q = QUIZ[ui.q.i];
+  return `
+  <div class="between"><button class="back" data-a="quizBack">← ${ui.q.i? 'Carte précédente':'Retour'}</button><span class="small muted">Le Test des Ombres</span></div>
+  <div class="dots">${QUIZ.map((_,i)=>`<i class="${i<ui.q.i?'on':''}"></i>`).join('')}</div>
+  <div class="tarot enter" style="padding:26px 18px;margin-top:14px;min-height:300px;display:flex;flex-direction:column;justify-content:center">
+    <div class="num">${ROMAN[ui.q.i]}</div>
+    <div style="margin:10px auto">${GLYPH_SVG('moon',40)}</div>
+    <p style="font-family:var(--serif);font-size:25px;line-height:1.25;font-weight:600">${q.t}</p>
+  </div>
+  <div style="margin-top:14px">
+    <button class="btn block" data-a="answer" data-v="0">Pas moi</button>
+    <button class="btn block" data-a="answer" data-v="1">Parfois</button>
+    <button class="btn block" data-a="answer" data-v="2">Tellement moi</button>
+  </div>
+  <p class="small muted center">Inspiré des 5 profils de Valerie Young. Ce n’est pas un diagnostic.</p>`;
+};
+const GLYPH_SVG = (g,s=32) => `<svg viewBox="0 0 48 48" width="${s}" height="${s}">${GLYPH[g]}</svg>`;
+
+SCREENS.quizResult = () => {
+  const [a,b] = ui.result;
+  const card = id => { const d=DEMONS[id]; return `<div class="tarot fade"><div class="num">${d.num}</div><div class="stage" style="min-height:130px">${demonSVG(id,{size:120,tame:0})}</div><div class="tname">${d.name}</div><div class="tprof">${d.profile}</div><p class="dv" style="font-size:16px;animation:none;margin-top:8px">« ${d.whisper} »</p></div>`; };
+  return `
+  <h2 class="center">Tes deux ombres</h2>
+  <p class="center muted small">Les voix qui chuchotent le plus fort chez toi en ce moment.</p>
+  <div class="grid2">${card(a)}${card(b)}</div>
+  <div class="card gold" style="margin-top:18px">
+    <p class="her" style="margin:0">Ces voix sont très répandues, surtout chez les femmes qui réussissent. Tu n’es pas seule.</p>
+  </div>
+  <p class="small muted">Les autres démons existent aussi : tu pourras les nommer quand ils se montrent. Ce test n’est pas un diagnostic.</p>
+  ${seal('finishQuiz','key','Entrer dans le Manoir')}`;
+};
+
+SCREENS.home = () => {
+  const p = S.profile, pend = S.rituals.filter(r=>r.status==='pending');
+  const recent = S.vigils.filter(v=>(Date.now()-new Date(v.date+'T12:00:00'))/864e5 <= 14).length;
+  const gap = S.lastSeen && (Date.now()-new Date(S.lastSeen+'T12:00:00'))/864e5 >= 2;
+  const lastV = S.vigils[S.vigils.length-1];
+  const doneToday = lastV && lastV.date===today();
+  return `
+  <div class="between" style="align-items:flex-end">
+    <div><div class="small muted">${new Date().toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'})}</div>
+    <h2 style="margin:2px 0 0">Bonsoir, ${esc(p.name)}</h2></div>
+  </div>
+  ${gap?`<p class="her" style="font-size:18px">Te revoilà. La flamme t’attendait.</p>`:''}
+  ${recent>=10?`<div class="banner">Les murmures sont fréquents ces temps-ci. Si ça dure depuis des semaines, en parler à quelqu’un (psy, médecin traitant, service de santé de l’école ou du travail) peut vraiment aider. <button class="btn ghost" style="min-height:44px;margin-top:6px" data-a="go" data-to="help">Parler à quelqu’un</button></div>`:''}
+  ${manorSVG()}
+  <p class="small muted center" style="margin-top:-4px">${totalCandles()} bougie${totalCandles()>1?'s':''} allumée${totalCandles()>1?'s':''} par tes actes. Touche une salle pour commencer.</p>
+  ${pend.length?`<h3 style="margin-top:18px">Rituels en attente</h3>
+    ${pend.map(r=>`<div class="card gold"><div class="small muted">${r.demon==='spectre'?SPECTRE.name:DEMONS[r.demon].name} · ${roomName(r.room)} · ${r.date===today()?'pour demain':'depuis le '+fmt(r.date)}</div>
+      <p class="her" style="font-size:19px;margin:6px 0 10px">${esc(r.text)}</p>
+      <button class="btn goldb block" data-a="ritualCheck" data-id="${r.id}">Raconter comment ça s’est passé</button></div>`).join('')}`:''}
+  ${seal('vigil','candle', doneToday?'Une autre Veillée':'La Veillée')}
+  <p class="small muted center">La flamme ne s’éteint jamais. Elle attend.</p>`;
+};
+
+/* ---------- Veillée ---------- */
+function newVigil(room){ return {step: room?'worry':'room', room, worry:'', typed:'', pick:null, demon:null, named:false, cast:[], spell:null, ff:null, rewrite:'', proofId:null, proofText:'', bal:null, balText:'', balSave:true, facts:'', ritualCustom:'', spectre:false}; }
+function thoughtOf(v){ return (v.typed.trim() || (v.pick&&v.pick.t) || '').trim(); }
+function splitThought(t){
+  let parts = t.split(/(?<=[,;:.!?…])\s+|\s+(?=(?:et|mais|donc|alors|parce que|parce qu|car|sinon|puisque|du coup|comme)\s)/i)
+    .map(s=>s.replace(/^[,;:\s]+|[,;:\s]+$/g,'').trim()).filter(s=>s.length>1);
+  if(parts.length<2){ const m = t.split(/\s+(?=(?:que|qu’|qu')\s?)/i).filter(s=>s.trim().length>1); if(m.length>1) parts=m.map(s=>s.trim()); }
+  return parts.length?parts:[t];
+}
+function fragmentsOf(v){ return (!v.typed.trim() && v.pick && v.pick.f) ? v.pick.f : splitThought(thoughtOf(v)); }
+
+SCREENS.vigil = () => {
+  const v = ui.v; const d = v.demon && DEMONS[v.demon];
+  const backBtn = (to,label='← Retour') => `<button class="back" data-a="vstep" data-s="${to}">${label}</button>`;
+  switch(v.step){
+  case 'room': return `
+    <button class="back" data-a="go" data-to="home">← Le Manoir</button>
+    <h2>Allumer la bougie</h2><p class="muted">Dans quelle salle ça se passe, ce soir ?</p>
+    ${ROOMS.filter(r=>!r.locked||cryptOpen()).map(r=>`<button class="opt" data-a="pickRoom" data-room="${r.id}"><span style="font-family:var(--serif);font-size:21px;font-weight:600">${r.name}</span><span class="tag">${r.dom} · ${S.rooms[r.id]} bougie${S.rooms[r.id]>1?'s':''}</span></button>`).join('')}
+    ${!cryptOpen()?`<p class="small muted">La Crypte (les vieilles blessures) s’ouvrira plus tard, quand le Manoir sera plus lumineux.</p>`:''}`;
+  case 'worry': return `
+    ${backBtn('room')}
+    <div class="small muted">${roomName(v.room)}</div>
+    <h2>Ce qui t’inquiète aujourd’hui</h2>
+    ${v.room==='crypte'?`<p class="her" style="font-size:18px">Ici, on avance doucement. Tu peux t’arrêter à tout moment.</p>`:''}
+    <textarea data-bind="v.worry" placeholder="La réunion de jeudi, le dossier à rendre, ce message resté sans réponse…">${esc(v.worry)}</textarea>
+    <p class="small muted">Facultatif. Rien ne quitte ton téléphone.</p>
+    <button class="btn block goldb" data-a="vstep" data-s="whisper">Écouter les murs</button>`;
+  case 'whisper': {
+    const dom = (S.profile.dominant||[]);
+    const ids = [...dom, ...ORDER.filter(i=>!dom.includes(i))];
+    const personal = ids.flatMap(id=>S.demons[id].phrases.slice(-2).map(t=>({demon:id,t,personal:true})));
+    const presets = ids.slice(0,4).flatMap(id=>DEMONS[id].phrases.slice(0, dom.includes(id)?3:1).map((p,i)=>({demon:id,t:p.t,f:p.f,i})));
+    const all = [...personal, ...presets];
+    const sel = o => v.pick && v.pick.t===o.t;
+    return `
+    ${backBtn('worry')}
+    <h2>Une voix sort du mur…</h2>
+    <p class="muted">Écris ce qu’elle te chuchote vraiment. C’est plus puissant.</p>
+    <textarea data-bind="v.typed" placeholder="Ce que la petite voix me dit…">${esc(v.typed)}</textarea>
+    <p class="small muted" style="margin-top:14px">Ou reconnais-la parmi ces murmures :</p>
+    ${all.map((o,k)=>`<button class="opt ${sel(o)?'on':''}" data-a="pickPhrase" data-k="${k}"><span class="dv">« ${esc(o.t)} »</span>${o.personal?`<span class="tag">tes mots</span>`:''}</button>`).join('')}
+    <button class="btn block goldb" data-a="vstep" data-s="name">Elle a parlé</button>`; }
+  case 'name': {
+    const hint = v.pick && v.pick.demon;
+    return `
+    ${backBtn('whisper')}
+    <p class="dv whisper" style="display:block">« ${esc(thoughtOf(v))} »</p>
+    <h2>Qui parle ?</h2>
+    <p class="muted">Nomme-la : c’est le premier coup porté.</p>
+    <div class="grid2">${ORDER.map(id=>{ const dd=DEMONS[id]; return `<button class="tarot ${v.demon===id?'':''}" style="cursor:pointer;color:inherit;${v.demon===id?'box-shadow:0 0 0 2px var(--gold)':hint===id?'box-shadow:0 0 0 1px var(--verdi)':''}" data-a="nameDemon" data-id="${id}">
+      <div class="num">${dd.num}</div>${demonSVG(id,{size:84})}<div class="tname" style="font-size:18px">${dd.name}</div><div class="tprof">${dd.profile}</div></button>`; }).join('')}</div>
+    ${v.named?`<div class="card gold fade" style="margin-top:16px"><p class="her" style="margin:0">${V(d,`Je te vois, ${voc(d)}. Tu n’es pas moi : tu es une voix que j’ai apprise.`,null,`Je vous vois, ${voc(d)}. Vous n’êtes pas moi : vous êtes des voix que j’ai apprises.`)}</p></div>
+      <button class="btn block goldb" data-a="vstep" data-s="spectre">Continuer</button>`:''}`; }
+  case 'spectre': return `
+    ${backBtn('name')}
+    <h2>Une question, avant le duel</h2>
+    <p class="her">Est-ce que quelqu’un a vraiment remis en cause ta compétence ?</p>
+    <p class="muted small">Parfois, la voix n’est pas intérieure : elle vient d’un lieu, d’une personne, d’un biais réel. Ça ne se combat pas pareil.</p>
+    <button class="btn block" data-a="spectreAns" data-v="oui">Oui, quelqu’un l’a fait</button>
+    <button class="btn block" data-a="spectreAns" data-v="non">Non, c’est ma voix intérieure</button>
+    <button class="btn block ghost" data-a="spectreAns" data-v="nsp">Je ne sais pas trop</button>`;
+  case 'spectreFlow': return `
+    ${backBtn('spectre')}
+    <div class="stage floaty">${demonSVG('spectre',{size:150,tame:4})}</div>
+    <h2 style="color:var(--ash)">${SPECTRE.name}</h2>
+    <p class="muted">${SPECTRE.desc}</p>
+    <div class="card"><p style="margin:0">Ce n’est pas un démon à apprivoiser, et ce n’est pas ta faute. Le Spectre ne se combat pas seule : <span class="gold">on note les faits, on trouve une alliée, on en parle à une personne de confiance.</span></p></div>
+    <label class="lab">Les faits, à froid : qui, quoi, quand, avec quels mots</label>
+    <textarea data-bind="v.facts" placeholder="Mardi, en réunion, X a dit…">${esc(v.facts)}</textarea>
+    <p class="small muted">Ces faits sont gardés dans ta Veillée, sur ton téléphone uniquement.</p>
+    <h3 style="margin-top:16px">Une action pour demain</h3>
+    ${SPECTRE.rituals.map((r,i)=>`<button class="opt" data-a="chooseRitual" data-i="${i}" data-sp="1"><span class="her" style="font-size:18px">${r}</span></button>`).join('')}
+    <button class="btn block ghost" data-a="vstep" data-s="duel">Il y a aussi une voix intérieure : aller au duel</button>`;
+  case 'duel': {
+    const shrink = v.cast.length*.11;
+    const enough = v.cast.length>=2, full = v.cast.length>=3;
+    const hit = ui.hit; ui.hit=false;
+    return `
+    <div class="between"><span class="small muted">${roomName(v.room)} · Le duel</span><span class="small muted">${v.cast.length} sort${v.cast.length>1?'s':''} lancé${v.cast.length>1?'s':''}</span></div>
+    <div class="stage"><div class="${hit?'hit':'floaty'}">${demonSVG(v.demon,{size:170,shrink})}</div></div>
+    <div class="center"><span class="small dname goth" style="font-size:20px">${d.name}</span></div>
+    <p class="whisper"><span class="dv">« ${esc(thoughtOf(v))} »</span></p>
+    ${full?`<div class="card gold fade"><p class="her" style="margin:0">Trois sorts. ${d.name} ${V(d,'vacille',null,'vacillent')}. C’est assez pour ce soir.</p></div>`:
+      `<p class="small muted center">Tire une carte et jette-la vers elle. 2 ou 3 sorts suffisent. Ils ne sont jamais notés : ils sont lancés.</p>
+      <div class="spells">${Object.entries(SPELLS).map(([k,s])=>`<button class="spell ${v.cast.includes(k)?'cast':''}" data-a="openSpell" data-k="${k}" ${v.cast.includes(k)?'disabled':''}>
+        ${d.best.includes(k)?'<span class="best">efficace</span>':''}${GLYPH_SVG(s.glyph,34)}<span class="sn">${s.name}</span><span class="sd">${s.d}</span></button>`).join('')}</div>`}
+    ${enough?seal('vstep','key','Elle faiblit','data-s="ritual"'):''}`; }
+  case 'spell': return spellScreen(v,d);
+  case 'ritual': return `
+    <div class="stage">${demonSVG(v.demon,{size:120,shrink:.35})}</div>
+    <p class="center"><span class="dv" style="font-size:18px">« Bon… essaie ça, demain. On verra bien. »</span></p>
+    <h2>${d.name} ${V(d,'lâche',null,'lâchent')} un rituel</h2>
+    <p class="muted small">Un acte à faire dans la vraie vie, demain. C’est là que tu gagnes vraiment.</p>
+    ${d.rituals.map((r,i)=>`<button class="opt" data-a="chooseRitual" data-i="${i}"><span class="her" style="font-size:19px">${r}</span></button>`).join('')}
+    <label class="lab">Ou écris le tien</label>
+    <input type="text" data-bind="v.ritualCustom" value="${esc(v.ritualCustom)}" placeholder="Un petit acte contre sa règle…">
+    <button class="btn block goldb" data-a="chooseRitual" data-i="custom">Sceller mon rituel</button>`;
+  case 'end': return `
+    <div class="center fade" style="padding-top:20px">
+      ${v.spectre && !v.demon ? demonSVG('spectre',{size:130,tame:6}) : demonSVG(v.demon,{size:120,shrink:.4})}
+      <h2>Rituel scellé</h2>
+      <p class="her">${esc(ui.lastRitual)}</p>
+      <p class="muted">Demain, reviens raconter comment ça s’est passé. Même si tu n’oses pas : dire ce qui bloque, c’est déjà un pas.</p>
+    </div>
+    ${seal('endVigil','moon','Retour au Manoir')}
+    <p class="small muted center">La flamme ne s’éteint jamais. Elle attend.</p>`;
+  }
+  return '';
+};
+
+function spellScreen(v,d){
+  const k = v.spell, s = SPELLS[k];
+  const anim = ui.spellAnim; ui.spellAnim = false;
+  const head = `<button class="back" data-a="vstep" data-s="duel">← Reposer la carte</button>
+    <div class="center ${anim?'enter':''}">${GLYPH_SVG(s.glyph,40)}<h2 class="gold" style="font-family:var(--serif);font-weight:600">${s.name}</h2></div>`;
+  if(k==='fait'){
+    const fr = fragmentsOf(v), ff = v.ff || (v.ff={sorted:{},done:false});
+    const all = fr.every((_,i)=>ff.sorted[i]);
+    if(ff.done){
+      const facts = fr.filter((_,i)=>ff.sorted[i]==='fait');
+      return `${head}
+      ${fr.map((t,i)=>`<div class="frag ${ff.sorted[i]==='fait'?'fait':'evap'}"><div class="ft" style="margin:0">${esc(t)}</div></div>`).join('')}
+      <div class="card gold fade"><p class="her" style="margin:0">${facts.length?`Les fantômes s’évaporent. Il reste ${facts.length>1?'ces faits':'ce fait'} : ${facts.map(esc).join(' ; ')}. Rien de plus.`:'Tout était fantôme. Il ne reste rien à quoi obéir.'}</p></div>
+      <button class="btn block goldb" data-a="castDone" data-k="fait">Retour au duel</button>`;
+    }
+    return `${head}
+    <p class="muted">Un <span class="gold">fait</span>, c’est ce qu’une caméra aurait pu filmer. Un <span class="dname">fantôme</span>, c’est une interprétation, une prédiction, un jugement.</p>
+    ${fr.map((t,i)=>`<div class="frag"><div class="ft">${esc(t)}</div><div class="row">
+      <button class="btn ${ff.sorted[i]==='fait'?'sel-fait':''}" data-a="ffSort" data-i="${i}" data-v="fait">Fait</button>
+      <button class="btn ${ff.sorted[i]==='fantome'?'sel-fant':''}" data-a="ffSort" data-i="${i}" data-v="fantome">Fantôme</button></div></div>`).join('')}
+    <button class="btn block goldb" data-a="ffCast" ${all?'':'disabled'}>Lancer le sort</button>`;
+  }
+  if(k==='soeur'){
+    if(v.soeurDone) return `${head}<div class="card gold fade"><p class="small muted" style="margin-top:0">Ta voix, ce soir :</p><p class="her" style="margin:0">${esc(v.rewrite)}</p></div>
+      <p class="center"><span class="dv" style="font-size:18px">« … »</span></p>
+      <button class="btn block goldb" data-a="castDone" data-k="soeur">Retour au duel</button>`;
+    return `${head}
+    <p class="center"><span class="dv">« ${esc(thoughtOf(v))} »</span></p>
+    <p>Si ta meilleure amie te disait ça d’elle-même, <span class="gold">que lui répondrais-tu ?</span> Réécris la phrase avec cette voix-là.</p>
+    <div class="row" style="margin-bottom:8px">
+      <button class="chip" data-a="starter" data-t="Beaucoup de gens ressentent ça, surtout quand ">Humanité commune</button>
+      <button class="chip" data-a="starter" data-t="Tu fais de ton mieux, et ">Bienveillance</button>
+      <button class="chip" data-a="starter" data-t="C’est une pensée difficile, pas un fait. ">Pleine conscience</button>
+    </div>
+    <textarea id="rw" data-bind="v.rewrite" placeholder="Hé, ma belle…">${esc(v.rewrite)}</textarea>
+    <button class="btn block goldb" data-a="soeurCast">Lancer le sort</button>`;
+  }
+  if(k==='miroir'){
+    if(v.miroirDone){ const p = S.proofs.find(x=>x.id===v.proofId);
+      return `${head}<div class="page fade"><div class="meta"><span>${fmt(p.date)}</span><span class="badge">${p.type}</span></div><div class="pt">${esc(p.text)}</div></div>
+      <p class="center"><span class="dv" style="font-size:18px">${d.name} ${V(d,'détourne',null,'détournent')} les yeux.</span></p>
+      <button class="btn block goldb" data-a="castDone" data-k="miroir">Retour au duel</button>`; }
+    const list = [...S.proofs].reverse().slice(0,30);
+    return `${head}
+    <p class="muted">Invoque une page du Grimoire qui contredit ${mid(d)}.</p>
+    ${list.length?list.map(p=>`<div class="page pagepick ${v.proofId===p.id?'on':''}" data-a="pickProof" data-id="${p.id}" role="button"><div class="meta"><span>${fmt(p.date)}</span><span class="badge">${p.type}</span>${p.room?`<span>${roomName(p.room)}</span>`:''}</div><div class="pt">${esc(p.text)}</div></div>`).join(''):
+      `<div class="card"><p style="margin:0">Ton Grimoire est encore vide. Écris ta première preuve : une chose réussie, un compliment reçu, un retour positif. Même petite.</p></div>`}
+    <label class="lab">${list.length?'Ou écris une nouvelle preuve':'Ta première preuve'}</label>
+    <textarea data-bind="v.proofText" placeholder="J’ai mené la réunion de lundi et on a pris une décision.">${esc(v.proofText)}</textarea>
+    <button class="btn block goldb" data-a="miroirCast">Invoquer la preuve</button>`;
+  }
+  if(k==='balance'){
+    const b = v.bal || (v.bal={chance:25,aide:25,effort:25,comp:25});
+    const tot = b.chance+b.aide+b.effort+b.comp, me = b.effort+b.comp;
+    const rows = [['chance','La chance','#8C8391'],['aide','L’aide des autres','#6FBFB0'],['effort','Mon effort','#a8853f'],['comp','Ma compétence','#C9A45C']];
+    if(v.balDone) return `${head}
+      <div class="bar">${rows.map(([k,,c])=>`<span style="width:${b[k]}%;background:${c}"></span>`).join('')}</div>
+      <div class="card gold fade"><p class="her" style="margin:0">${me>=40?`${me} % de ce succès vient de toi. C’est réel, et ${mid(d)} ${V(d,'perd',null,'perdent')} des forces.`:`Regarde encore : qui a choisi, préparé, osé ? Une part de ce succès est à toi, même si ${mid(d)} ${V(d,'ricane',null,'ricanent')}.`}</p></div>
+      <button class="btn block goldb" data-a="castDone" data-k="balance">Retour au duel</button>`;
+    return `${head}
+    <p class="muted">Pense à un succès récent, même petit. Répartis 100 % entre ses vraies causes.</p>
+    <input type="text" data-bind="v.balText" value="${esc(v.balText)}" placeholder="Le succès : j’ai eu mon partiel, j’ai livré le projet…">
+    <div class="bar">${rows.map(([k,,c])=>`<span style="width:${b[k]}%;background:${c}"></span>`).join('')}</div>
+    ${rows.map(([k,l,c])=>`<div class="bal"><span><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${c};margin-right:8px"></span>${l}</span>
+      <button class="btn" data-a="bal" data-k="${k}" data-d="-10" aria-label="moins">−</button><span class="v">${b[k]} %</span><button class="btn" data-a="bal" data-k="${k}" data-d="10" aria-label="plus" ${tot>=100?'disabled':''}>+</button></div>`).join('')}
+    <p class="small ${tot===100?'gold':'muted'} center">${tot===100?'La balance est équilibrée.':`Il reste ${100-tot} % à placer.`}</p>
+    <label class="row small" style="margin:10px 0;min-height:44px"><input type="checkbox" data-bind="v.balSave" ${v.balSave?'checked':''} style="width:22px;height:22px"> Inscrire ce succès dans le Grimoire</label>
+    <button class="btn block goldb" data-a="balCast" ${tot===100?'':'disabled'}>Lancer le sort</button>`;
+  }
+  return head;
+}
+
+/* ---------- validation du rituel ---------- */
+SCREENS.ritualCheck = () => {
+  const r = S.rituals.find(x=>x.id===ui.rc.id), c = ui.rc;
+  const dn = r.demon==='spectre'?SPECTRE.name:DEMONS[r.demon].name;
+  if(c.result) return `
+    <div class="center fade" style="padding-top:10px">
+      ${r.demon==='spectre'?demonSVG('spectre',{size:120,tame:6}):demonSVG(r.demon,{size:140})}
+      <p class="her">${c.result}</p>
+      ${c.status==='fait'?`<p class="muted">Une bougie s’allume dans ${roomName(r.room)}.</p>`:''}
+    </div>
+    ${seal('afterCheck','moon','Retour au Manoir')}`;
+  return `
+  <button class="back" data-a="go" data-to="home">← Le Manoir</button>
+  <div class="small muted">Rituel de ${dn} · ${roomName(r.room)}</div>
+  <h2 style="font-family:var(--serif);font-weight:600;color:var(--gold)">${esc(r.text)}</h2>
+  <p class="muted">Alors, comment ça s’est passé ?</p>
+  <button class="btn block ${c.status==='fait'?'goldb':''}" data-a="rcStatus" data-v="fait">Je l’ai fait</button>
+  <button class="btn block ${c.status==='pasose'?'goldb':''}" data-a="rcStatus" data-v="pasose">Je n’ai pas osé</button>
+  <button class="btn block ${c.status==='occasion'?'goldb':''}" data-a="rcStatus" data-v="occasion">Pas eu l’occasion</button>
+  ${c.status==='fait'?`<label class="lab">Comment c’était ? Qu’est-ce qui s’est passé ensuite ?</label>
+    <textarea data-bind="rc.note" placeholder="J’ai envoyé le dossier à 80 %… et personne n’a rien remarqué.">${esc(c.note)}</textarea>
+    <label class="row small" style="margin:10px 0;min-height:44px"><input type="checkbox" data-bind="rc.grim" ${c.grim?'checked':''} style="width:22px;height:22px"> Inscrire dans le Grimoire des preuves</label>`:''}
+  ${c.status==='pasose'?`<label class="lab">Qu’est-ce qui t’a bloquée ?</label>
+    <textarea data-bind="rc.note" placeholder="J’ai eu peur que…">${esc(c.note)}</textarea>
+    <p class="small muted">Pas de punition ici. Dire ce qui bloque, c’est regarder le démon dans les yeux.</p>`:''}
+  ${c.status==='occasion'?`<p class="small muted">Le rituel reste dans ta poche. Il attendra le bon moment.</p>`:''}
+  ${c.status?seal('rcSave','candle','Raconter'):''}`;
+};
+
+SCREENS.familiar = () => {
+  const id = ui.famId, d = DEMONS[id];
+  return `<div class="center fade" style="padding-top:16px">
+    <p class="small muted">${V(d,'Apprivoisée','Apprivoisé','Apprivoisées')}</p>
+    <div class="stage floaty">${demonSVG(id,{size:170,familiar:true})}</div>
+    <h2 class="dname">${d.familiar.name}</h2>
+    <p class="her">${d.name} ${V(d,'a rétréci. Elle te donne','a rétréci. Il te donne','ont rétréci. Elles te donnent')} ${d.familiar.gift}.</p>
+    <p class="muted">Ta voix critique peut devenir une alliée. Elle ne disparaît pas : elle a cessé de commander.</p>
+  </div>${seal('go','moon','Continuer','data-to="home"')}`;
+};
+
+/* ---------- Grimoire ---------- */
+SCREENS.grimoire = () => `
+  <h2>Le Grimoire des preuves</h2>
+  <p class="muted small">Les démons ne supportent pas ces pages. Relis-les quand la voix revient.</p>
+  <div class="row"><input type="search" data-filter placeholder="Rechercher une preuve…" style="flex:1" aria-label="Rechercher"><button class="btn goldb" data-a="newProof">+ Page</button></div>
+  <div id="pages">${S.proofs.length?[...S.proofs].reverse().map(p=>`<div class="page" data-text="${esc(norm(p.text+' '+p.type+' '+roomName(p.room)))}">
+    <div class="meta"><span>${fmt(p.date)}</span><span class="badge">${p.type}</span>${p.room?`<span>${roomName(p.room)}</span>`:''}</div>
+    <div class="pt">${esc(p.text)}</div>
+    ${p.causes?`<div class="small muted">chance ${p.causes.chance} % · aide ${p.causes.aide} % · effort ${p.causes.effort} % · compétence ${p.causes.comp} %</div>`:''}
+    <div class="row end"><button class="back small" data-a="delProof" data-id="${p.id}">Retirer</button></div></div>`).join(''):
+    `<div class="card"><p style="margin:0">Aucune page pour l’instant. Une réussite, un compliment, un retour positif : même petit, ça compte.</p></div>`}</div>
+  <p id="nores" class="muted center" style="display:none">Aucune page ne correspond.</p>`;
+
+SCREENS.proofForm = () => { const f = ui.pf; return `
+  <button class="back" data-a="go" data-to="grimoire">← Le Grimoire</button>
+  <h2>Nouvelle page</h2>
+  <label class="lab">Type</label>
+  <div class="row">${['réussite','compliment','feedback'].map(t=>`<button class="chip ${f.type===t?'on':''}" data-a="pfType" data-v="${t}">${t}</button>`).join('')}</div>
+  <label class="lab" for="pfr">Salle</label>
+  <select id="pfr" data-bind="pf.room"><option value="">—</option>${ROOMS.filter(r=>!r.locked||cryptOpen()).map(r=>`<option value="${r.id}" ${f.room===r.id?'selected':''}>${r.name}</option>`).join('')}</select>
+  <label class="lab">La preuve</label>
+  <textarea data-bind="pf.text" placeholder="${f.type==='compliment'?'« Ta présentation était super claire » — Léa':'J’ai réussi à…'}">${esc(f.text)}</textarea>
+  ${seal('saveProof','book','Inscrire')}`; };
+
+/* ---------- Bestiaire ---------- */
+SCREENS.bestiary = () => `
+  <h2>Le Bestiaire</h2>
+  <p class="muted small">Nommer un démon, c’est déjà lui porter un coup.</p>
+  <div class="grid2">
+  ${ORDER.map(id=>{ const d=DEMONS[id], st=S.demons[id]; return `<button class="tarot" style="cursor:pointer;color:inherit" data-a="demon" data-id="${id}">
+    <div class="num">${d.num}</div>${demonSVG(id,{size:96,familiar:st.familiar})}
+    <div class="tname" style="font-size:18px">${st.familiar?d.familiar.name:d.name}</div><div class="tprof">${d.profile}</div>
+    <div style="display:flex;justify-content:center;margin-top:6px">${candles(st.tame,TAME_MAX).replace('class="cands"','class="cands" style="gap:2px;transform:scale(.7)"')}</div></button>`; }).join('')}
+  <div class="tarot" style="opacity:.75"><div class="num">VII</div>${demonSVG('spectre',{size:96,tame:6})}<div class="tname" style="font-size:18px;color:var(--ash)">${SPECTRE.name}</div><div class="tprof">Environnement biaisé · combattu ${S.spectre} fois avec d’autres</div></div>
+  <div class="tarot" style="opacity:.45"><div class="num">VIII</div>${demonSVG('ouroboros',{size:96,tame:6})}<div class="tname" style="font-size:18px;color:var(--ash)">L’Ouroboros</div><div class="tprof">Le cycle entier · le Pacte arrive bientôt</div></div>
+  </div>`;
+
+SCREENS.demon = () => {
+  const id = ui.demonId, d = DEMONS[id], st = S.demons[id];
+  const words = d.whisper.split(' '); const keep = Math.max(3, words.length - st.tame);
+  const ph = words.slice(0,keep).join(' ') + (keep<words.length?'…':'');
+  const done = S.rituals.filter(r=>r.demon===id && r.status==='fait').length;
+  return `
+  <button class="back" data-a="go" data-to="bestiary">← Le Bestiaire</button>
+  <div class="tarot" style="padding:18px">
+    <div class="num">${d.num}</div>
+    <div class="stage floaty">${demonSVG(id,{size:170})}</div>
+    <div class="tname" style="font-size:28px">${d.name}</div><div class="tprof">${d.profile}</div>
+    <p class="dv" style="margin-top:10px">« ${ph} »</p>
+  </div>
+  <p>${d.desc}</p>
+  <div class="card"><div class="small muted">Sa règle secrète</div><p style="margin:2px 0 8px;font-family:var(--serif);font-size:19px">${d.rule}</p>
+  <div class="small muted">Ce qui déclenche la honte</div><p style="margin:2px 0 0;font-family:var(--serif);font-size:19px">${d.shame}</p></div>
+  <h3>Apprivoisement</h3>${candles(st.tame,TAME_MAX)}
+  <p class="small muted">${V(d,'Elle s’apprivoise','Il s’apprivoise','Elles s’apprivoisent')} surtout avec les rituels faits dans la vraie vie (${done} fait${done>1?'s':''}). ${V(d,'Plus elle est apprivoisée, plus sa voix est faible.','Plus il est apprivoisé, plus sa voix est faible.','Plus elles sont apprivoisées, plus leur voix est faible.')}</p>
+  <h3>Ses rituels</h3>${d.rituals.map(r=>`<p class="her" style="font-size:18px;margin:6px 0">· ${r}</p>`).join('')}
+  <h3 style="margin-top:14px">Sorts les plus efficaces</h3><p>${d.best.map(k=>SPELLS[k].name).join(' · ')}</p>
+  ${st.phrases.length?`<h3 style="margin-top:14px">Ses répliques, avec tes mots</h3>${st.phrases.slice(-5).reverse().map(t=>`<p class="dv" style="font-size:18px;animation:none;display:block">« ${esc(t)} »</p>`).join('')}`:''}
+  <div class="card ${st.familiar?'gold':''}" style="margin-top:16px;text-align:center">
+    ${st.familiar?`${demonSVG(id,{size:110,familiar:true})}<div class="goth dname" style="font-size:22px">${d.familiar.name}</div><p class="her" style="font-size:18px">${d.familiar.gift}</p>`:
+    `<div class="small muted">Familier une fois ${V(d,'apprivoisée','apprivoisé','apprivoisées')}</div><p style="font-family:var(--serif);font-size:20px;margin:4px 0">?</p>`}
+  </div>`;
+};
+
+/* ---------- Morgane / réglages ---------- */
+SCREENS.me = () => {
+  const p = S.profile, done = S.rituals.filter(r=>r.status==='fait').length;
+  const tg = (k,l,sub) => `<div class="toggle"><div><div>${l}</div>${sub?`<div class="small muted">${sub}</div>`:''}</div><button class="switch ${S.settings[k]?'on':''}" data-a="toggle" data-k="${k}" role="switch" aria-checked="${!!S.settings[k]}" aria-label="${esc(l)}"></button></div>`;
+  return `
+  <div class="center">${morganeSVG(p,220)}<h2>${esc(p.name)}</h2>
+  <p class="small muted">Gardienne du Manoir depuis le ${fmt(p.start)} · ${done} rituel${done>1?'s':''} accompli${done>1?'s':''} · ${S.proofs.length} page${S.proofs.length>1?'s':''} au Grimoire</p></div>
+  <button class="btn block" data-a="editLook">Changer mon apparence</button>
+  <div class="card"><div class="small muted">Tes ombres dominantes</div><p style="margin:4px 0 0;font-family:var(--serif);font-size:19px" class="dname">${(p.dominant||[]).map(id=>DEMONS[id].name).join(' · ')}</p>
+  <button class="back small" data-a="redoQuiz">Refaire le Test des Ombres</button></div>
+  <h3 style="margin-top:16px">Réglages</h3>
+  ${tg('vibrate','Vibrations','Quand un sort touche ou qu’un rituel est scellé')}
+  ${tg('calm','Réduire les animations','L’option du téléphone est aussi respectée')}
+  ${installCard()}
+  <h3 style="margin-top:20px">Tes données</h3>
+  <p class="small muted">Tout reste sur ce téléphone, dans ce navigateur. Rien n’est envoyé en ligne.</p>
+  <button class="btn block" data-a="exportData">Exporter mes données</button>
+  <button class="btn block" data-a="wipe" style="border-color:#5a1a2a;color:#e08a9c">Tout effacer</button>
+  <p class="small muted" style="margin-top:18px">NOCTURNE accompagne, il ne soigne pas. Ce n’est ni un diagnostic ni une thérapie.</p>`;
+};
+
+SCREENS.help = () => `
+  <button class="back" data-a="goBack">← Retour</button>
+  <h2>Parler à quelqu’un</h2>
+  <p>Le jeu accompagne, il ne soigne pas. Si les murmures sont très fréquents depuis des semaines, ou si tu te sens à bout, une vraie personne peut t’aider : un·e psy, ton médecin traitant, le service de santé de ton école ou de ton travail.</p>
+  <a class="tel" href="tel:3114"><b>3114</b><span>Numéro national de prévention du suicide<br><span class="small muted">24 h/24, 7 j/7, gratuit</span></span></a>
+  <a class="tel" href="tel:15"><b>15</b><span>SAMU<br><span class="small muted">Urgence médicale</span></span></a>
+  <a class="tel" href="tel:112"><b>112</b><span>Numéro d’urgence européen</span></a>
+  <a class="tel" href="sms:114"><b>114</b><span>Urgence par SMS<br><span class="small muted">Pour les personnes sourdes ou malentendantes</span></span></a>
+  <a class="tel" href="tel:0972394050"><b style="font-size:17px">SOS Amitié</b><span>09 72 39 40 50<br><span class="small muted">Écoute anonyme, 24 h/24</span></span></a>`;
+
+SCREENS.distress = () => `
+  <div class="center fade" style="padding-top:10px">
+    <div class="breath"></div>
+    <h2>On met le combat en pause</h2>
+    <p>Ce que tu as écrit ressemble à une grande douleur. Tu mérites d’être soutenue tout de suite, par une vraie personne.</p>
+    <p class="muted small">Inspire pendant que le cercle grandit, expire quand il rétrécit.</p>
+  </div>
+  <a class="tel" href="tel:3114"><b>3114</b><span>Prévention du suicide<br><span class="small muted">24 h/24, gratuit, des professionnel·les t’écoutent</span></span></a>
+  <a class="tel" href="tel:15"><b>15</b><span>SAMU, en cas d’urgence</span></a>
+  <a class="tel" href="tel:112"><b>112</b><span>Urgence européen</span></a>
+  <button class="btn block ghost" data-a="go" data-to="home">Revenir au Manoir</button>
+  <button class="btn block ghost" data-a="resumeDistress">Je suis en sécurité, reprendre</button>`;
+
+/* ============================================================
+   ACTIONS
+   ============================================================ */
+const A = {};
+A.go = ({to}) => go(to);
+A.goBack = () => go(ui.prev && ui.prev!=='help' ? ui.prev : (S.profile?'home':'welcome'));
+A.startOnb = () => { ui.draft = defaultDraft(); ui.editing=false; go('profile'); };
+A.draft = ({k,v}) => { ui.draft[k] = v==='true'?true:v==='false'?false:v; rerender(); };
+A.saveDraft = () => {
+  ui.draft.name = (ui.draft.name||'').trim() || 'Morgane';
+  if(ui.editing){ S.profile = {...S.profile, ...ui.draft}; save(); ui.editing=false; go('me'); }
+  else { ui.q = {i:0, ans:[]}; go('quiz'); }
+};
+A.answer = ({v}) => {
+  ui.q.ans[ui.q.i] = +v; ui.q.i++;
+  if(ui.q.i >= QUIZ.length){
+    const sc = Object.fromEntries(YOUNG.map(id=>[id,0]));
+    QUIZ.forEach((q,i)=> sc[q.d] += ui.q.ans[i]||0);
+    ui.result = [...YOUNG].sort((a,b)=>sc[b]-sc[a]).slice(0,2);
+    go('quizResult');
+  } else go('quiz');
+};
+A.quizBack = () => { if(ui.q.i===0){ go(ui.redo?'me':'profile'); } else { ui.q.i--; go('quiz'); } };
+A.finishQuiz = () => {
+  if(ui.redo && S.profile){ S.profile.dominant = ui.result; ui.redo=false; }
+  else S.profile = {...ui.draft, dominant: ui.result, start: today()};
+  save(); go('home');
+};
+A.redoQuiz = () => { ui.redo = true; ui.q={i:0,ans:[]}; go('quiz'); };
+A.editLook = () => { ui.draft = {...defaultDraft(), ...S.profile}; ui.editing = true; go('profile'); };
+
+A.vigil = ({room}) => { if(room==='crypte' && !cryptOpen()) return; ui.v = newVigil(room||null); go('vigil'); };
+A.lockedCrypt = () => { toast(`La Crypte s’ouvrira quand ${CRYPT_UNLOCK} bougies brilleront dans le Manoir.`); };
+A.pickRoom = ({room}) => { ui.v.room = room; ui.v.step='worry'; go('vigil'); };
+A.vstep = ({s}) => {
+  const v = ui.v;
+  if(s==='whisper' && v.step==='worry' && guard(v.worry)) return;
+  if(s==='name' && v.step==='whisper'){
+    if(!thoughtOf(v)){ toast('Écris sa phrase ou choisis un murmure.'); return; }
+    if(guard(v.typed, v.worry)) return;
+    v.named = false; v.demon = null; v.ff = null;
+  }
+  v.step = s; v.spell = null; go('vigil');
+};
+A.pickPhrase = ({k}) => {
+  const v = ui.v, dom = (S.profile.dominant||[]);
+  const ids = [...dom, ...ORDER.filter(i=>!dom.includes(i))];
+  const personal = ids.flatMap(id=>S.demons[id].phrases.slice(-2).map(t=>({demon:id,t,personal:true})));
+  const presets = ids.slice(0,4).flatMap(id=>DEMONS[id].phrases.slice(0, dom.includes(id)?3:1).map((p,i)=>({demon:id,t:p.t,f:p.f,i})));
+  const o = [...personal, ...presets][+k];
+  v.pick = o; v.typed = ''; rerender();
+};
+A.nameDemon = ({id}) => { ui.v.demon = id; ui.v.named = true; buzz(25); rerender(); setTimeout(()=>{ const c=document.querySelector('.card.gold'); c&&c.scrollIntoView({behavior:'smooth',block:'center'}); },60); };
+A.spectreAns = ({v:a}) => {
+  if(a==='oui'){ ui.v.spectre = true; ui.v.step='spectreFlow'; go('vigil'); }
+  else { ui.v.step='duel'; go('vigil'); }
+};
+A.openSpell = ({k}) => { if(ui.v.cast.includes(k)) return; ui.v.spell=k; ui.v.step='spell'; ui.spellAnim=true; go('vigil'); };
+A.ffSort = ({i,v}) => { ui.v.ff.sorted[i]=v; rerender(); };
+A.ffCast = () => { ui.v.ff.done = true; buzz([20,40,20]); rerender(); };
+A.starter = ({t}) => { const v=ui.v; v.rewrite = (v.rewrite? v.rewrite.trimEnd()+' ' : '') + t; rerender(); const el=document.getElementById('rw'); if(el){ el.focus(); el.setSelectionRange(el.value.length,el.value.length);} };
+A.soeurCast = () => { const v=ui.v; if(v.rewrite.trim().length<3){ toast('Écris quelques mots avec ta voix de sœur.'); return; } if(guard(v.rewrite)) return; v.soeurDone=true; buzz([20,40,20]); rerender(); };
+A.pickProof = ({id}) => { ui.v.proofId = id; ui.v.proofText=''; rerender(); };
+A.miroirCast = () => {
+  const v=ui.v;
+  if(v.proofText.trim()){ if(guard(v.proofText)) return; const p={id:uid(),date:today(),room:v.room,text:v.proofText.trim(),type:'réussite'}; S.proofs.push(p); save(); v.proofId=p.id; }
+  if(!v.proofId){ toast('Choisis une page ou écris une preuve.'); return; }
+  v.miroirDone = true; buzz([20,40,20]); rerender();
+};
+A.bal = ({k,d}) => { const b=ui.v.bal; const tot=b.chance+b.aide+b.effort+b.comp; const n=b[k]+(+d); if(n<0 || (+d>0 && tot>=100)) return; b[k]=n; rerender(); };
+A.balCast = () => {
+  const v=ui.v, b=v.bal;
+  if(v.balSave && v.balText.trim()){ if(guard(v.balText)) return; S.proofs.push({id:uid(),date:today(),room:v.room,text:v.balText.trim(),type:'réussite',causes:{...b}}); save(); }
+  v.balDone=true; buzz([20,40,20]); rerender();
+};
+A.castDone = ({k}) => { const v=ui.v; if(!v.cast.includes(k)) v.cast.push(k); v.spell=null; v.step='duel'; ui.hit=true; buzz(40); go('vigil'); };
+A.chooseRitual = ({i, sp}) => {
+  const v = ui.v; let text;
+  if(sp){ text = SPECTRE.rituals[+i]; }
+  else if(i==='custom'){ text = v.ritualCustom.trim(); if(!text){ toast('Écris ton rituel, ou choisis-en un.'); return; } if(guard(text)) return; }
+  else text = DEMONS[v.demon].rituals[+i];
+  if(sp && guard(v.facts)) return;
+  const demon = sp ? 'spectre' : v.demon;
+  const r = {id:uid(), demon, room:v.room, text, date:today(), status:'pending', note:''};
+  S.rituals.push(r);
+  const thought = thoughtOf(v);
+  if(v.demon && v.typed.trim()){ const ph=S.demons[v.demon].phrases; if(!ph.includes(v.typed.trim())) ph.push(v.typed.trim()); }
+  S.vigils.push({date:today(), room:v.room, demon:v.demon, worry:v.worry, thought, spells:[...v.cast], rewrite:v.rewrite, facts:v.facts, spectre:v.spectre, ritualId:r.id});
+  if(sp) S.spectre++;
+  if(v.demon && !sp) addTame(v.demon, 1);
+  S.lastSeen = today(); save();
+  ui.lastRitual = text; if(sp) ui.v.demon = ui.v.demon || null;
+  buzz([30,60,30]); v.step='end'; go('vigil');
+};
+A.endVigil = () => { if(ui.famId){ go('familiar'); } else go('home'); };
+
+A.ritualCheck = ({id}) => { ui.rc = {id, status:null, note:'', grim:true, result:null}; go('ritualCheck'); };
+A.rcStatus = ({v}) => { ui.rc.status = v; rerender(); };
+A.rcSave = () => {
+  const c = ui.rc, r = S.rituals.find(x=>x.id===c.id);
+  if(guard(c.note)) return;
+  const dn = r.demon==='spectre'?SPECTRE.name:DEMONS[r.demon].name;
+  if(c.status==='fait'){
+    r.status='fait'; r.note=c.note; r.doneDate=today();
+    S.rooms[r.room] = (S.rooms[r.room]||0)+1;
+    if(r.demon!=='spectre') addTame(r.demon, 2);
+    if(c.grim) S.proofs.push({id:uid(),date:today(),room:r.room,text: c.note.trim() ? `${r.text} — ${c.note.trim()}` : `J’ai osé : ${r.text}`,type:'réussite'});
+    c.result = r.demon==='spectre' ? 'Tu ne l’as pas affronté seule. C’est exactement comme ça qu’on le combat.' : `Tu l’as fait. ${dn} ${V(DEMONS[r.demon],'rétrécit un peu, et sa voix devient plus faible',null,'rétrécissent un peu, et leurs voix deviennent plus faibles')}.`;
+    buzz([30,60,30]);
+  } else if(c.status==='pasose'){
+    r.status='pasose'; r.note=c.note; r.doneDate=today();
+    if(r.demon!=='spectre') addTame(r.demon, 1);
+    c.result = 'Tu as regardé ce qui bloque. Ça compte aussi : la prochaine fois, le pas sera plus petit.';
+  } else {
+    r.date = today();
+    c.result = 'Le rituel reste dans ta poche. Rien n’est perdu, la flamme attend.';
+  }
+  S.lastSeen = today(); save(); rerender();
+};
+A.afterCheck = () => { if(ui.famId) go('familiar'); else go('home'); };
+
+A.newProof = () => { ui.pf = {type:'réussite', room:'', text:''}; go('proofForm'); };
+A.pfType = ({v}) => { ui.pf.type = v; rerender(); };
+A.saveProof = () => { const f=ui.pf; if(!f.text.trim()){ toast('Écris ta preuve.'); return; } if(guard(f.text)) return;
+  S.proofs.push({id:uid(),date:today(),room:f.room,text:f.text.trim(),type:f.type}); S.lastSeen=today(); save(); buzz(25); go('grimoire'); };
+A.delProof = ({id}) => { if(confirm('Retirer cette page du Grimoire ?')){ S.proofs = S.proofs.filter(p=>p.id!==id); save(); rerender(); } };
+
+A.demon = ({id}) => { ui.demonId = id; go('demon'); };
+A.toggle = ({k}) => { S.settings[k] = !S.settings[k]; save(); rerender(); };
+A.exportData = () => {
+  const blob = new Blob([JSON.stringify(S,null,2)],{type:'application/json'});
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `nocturne-${today()}.json`; document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(a.href),2000);
+};
+A.wipe = () => { if(confirm('Effacer toutes tes données (Grimoire, démons, rituels, Manoir) ? Impossible à annuler.')){ localStorage.removeItem(KEY); S = blank(); go('welcome'); } };
+A.resumeDistress = () => { go(ui.distressFrom && ui.distressFrom!=='distress' ? ui.distressFrom : 'home'); };
+
+function addTame(id, n){
+  const d = S.demons[id]; if(!d) return;
+  d.tame = Math.min(TAME_MAX, d.tame + n);
+  if(d.tame >= TAME_MAX && !d.familiar){ d.familiar = true; ui.famId = id; }
+}
+
+/* ============================================================
+   RENDU
+   ============================================================ */
+const app = document.getElementById('app');
+const MAIN = {home:'home', grimoire:'grim', proofForm:'grim', bestiary:'best', demon:'best', me:'me'};
+function shell(inner){
+  const onb = !S.profile;
+  const tab = MAIN[ui.screen];
+  return `<header class="top"><span class="brand">Nocturne</span><button class="talk" data-a="go" data-to="help">Parler à quelqu’un</button></header>
+  <main class="screen">${inner}</main>
+  ${!onb && tab ? `<nav class="nav" aria-label="Navigation">
+    ${[['home','home','Manoir'],['grimoire','grim','Grimoire'],['bestiary','best','Bestiaire'],['me','me',esc(S.profile.name)]].map(([s,ic,l])=>`<button class="${tab===ic?'on':''}" data-a="go" data-to="${s}">${NAVICON[ic]}<span>${l}</span></button>`).join('')}
+  </nav>`:''}
+  <div id="toast" role="status" aria-live="polite" style="position:fixed;left:50%;bottom:90px;transform:translateX(-50%);max-width:420px;width:calc(100% - 36px);background:#2e1d34;border:1px solid var(--line);border-radius:12px;padding:12px 14px;font-size:14px;display:none;z-index:30"></div>`;
+}
+function rerender(){
+  if(ui.screen==='famId') return;
+  document.body.classList.toggle('calm', !!S.settings.calm);
+  document.body.classList.toggle('onb', !S.profile);
+  const y = window.scrollY;
+  app.innerHTML = shell(SCREENS[ui.screen]());
+  window.scrollTo(0,y);
+}
+function go(s){
+  if(s==='familiar'){ ui.screen='familiar'; }
+  if(s==='home' && ui.famId && ui.screen==='familiar'){ ui.famId=null; }
+  if(s!==ui.screen) ui.prev = ui.screen;
+  if(!S.profile && !['welcome','profile','quiz','quizResult','help','distress'].includes(s)) s='welcome';
+  ui.screen = s;
+  rerender(); window.scrollTo(0,0);
+}
+let toastT;
+function toast(msg){ const t=document.getElementById('toast'); if(!t) return; t.textContent=msg; t.style.display='block'; clearTimeout(toastT); toastT=setTimeout(()=>t.style.display='none',2600); }
+
+function setPath(obj, path, val){ const ks=path.split('.'); let o=obj; for(let i=0;i<ks.length-1;i++) o=o[ks[i]]; o[ks[ks.length-1]]=val; }
+document.addEventListener('click', e=>{
+  const el = e.target.closest('[data-a]'); if(!el) return;
+  const fn = A[el.dataset.a]; if(fn){ e.preventDefault(); fn({...el.dataset}, el); }
+});
+document.addEventListener('keydown', e=>{
+  if((e.key==='Enter'||e.key===' ') && e.target.matches('.page[data-a]')){ e.preventDefault(); e.target.click(); }
+});
+document.addEventListener('input', e=>{
+  const el = e.target;
+  if(el.dataset.bind){
+    const path = el.dataset.bind.replace(/^v\./,'').replace(/^rc\./,'').replace(/^pf\./,'').replace(/^draft\./,'');
+    const root = el.dataset.bind.split('.')[0];
+    setPath(ui[root], path, el.type==='checkbox'?el.checked:el.value);
+  }
+  if(el.dataset.filter!==undefined){
+    const q = norm(el.value.trim()); let n=0;
+    document.querySelectorAll('#pages .page').forEach(p=>{ const ok = !q || p.dataset.text.includes(q); p.style.display = ok?'':'none'; if(ok) n++; });
+    const nr=document.getElementById('nores'); if(nr) nr.style.display = (n===0 && S.proofs.length)?'block':'none';
+  }
+});
+document.addEventListener('change', e=>{ if(e.target.type==='checkbox' && e.target.dataset.bind){ e.target.dispatchEvent(new Event('input',{bubbles:true})); } });
+
+/* ---------- PWA : installation, hors ligne, stockage durable ---------- */
+const isStandalone = () => window.matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+const isIOS = () => /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform==='MacIntel' && navigator.maxTouchPoints>1);
+let installEvt = null;
+window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); installEvt = e; if(ui.screen==='me') rerender(); });
+window.addEventListener('appinstalled', () => { installEvt = null; toast('NOCTURNE est sur ton écran d’accueil.'); if(ui.screen==='me') rerender(); });
+function installCard(){
+  if(isStandalone()) return `<div class="banner" style="margin-top:16px">NOCTURNE est installé et marche hors ligne.</div>`;
+  if(installEvt) return `<h3 style="margin-top:20px">Sur ton écran d’accueil</h3><button class="btn block goldb" data-a="install">Installer NOCTURNE</button><p class="small muted">Il s’ouvrira comme une app et marchera hors ligne.</p>`;
+  if(isIOS()) return `<h3 style="margin-top:20px">Sur ton écran d’accueil</h3><div class="card"><p style="margin:0">Dans Safari, touche le bouton <b>Partager</b> (le carré avec une flèche), puis <b>Sur l’écran d’accueil</b>.</p></div>`;
+  return `<h3 style="margin-top:20px">Sur ton écran d’accueil</h3><p class="small muted">Dans le menu de ton navigateur, choisis « Installer l’application » ou « Ajouter à l’écran d’accueil ».</p>`;
+}
+A.install = async () => { if(!installEvt) return; installEvt.prompt(); try{ await installEvt.userChoice; }catch(e){} installEvt = null; rerender(); };
+if('serviceWorker' in navigator && location.protocol !== 'file:'){
+  window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(()=>{}));
+}
+if(navigator.storage && navigator.storage.persist){ navigator.storage.persist().catch(()=>{}); }
+
+if(S.profile){ S.lastSeen = S.lastSeen || today(); }
+rerender();
+window.addEventListener('beforeunload', ()=>{ if(S.profile){ S.lastSeen = today(); save(); } });
+</script>
+</body>
+</html>
